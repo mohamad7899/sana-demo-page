@@ -1,63 +1,158 @@
 
-/* =====================================
-   SanaDemo - Advanced 3D Motion Engine
-   Neon + Glassmorphism
-===================================== */
+/* ==========================================
+   SanaDemo ULTIMATE 3D ENGINE
+   Neon + Glass + Interactive Motion
+========================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    const body = document.body;
+    const root = document.documentElement;
+
+    const isMobile = window.matchMedia("(max-width: 700px)").matches;
+    const hasFinePointer = window.matchMedia(
+        "(hover: hover) and (pointer: fine)"
+    ).matches;
+
+    const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+
+    // ======================================
     // 1. 3D CARD TILT
+    // ======================================
 
     const cards = document.querySelectorAll(".card");
 
-    cards.forEach(card => {
+    if (!reducedMotion && hasFinePointer) {
 
-        card.addEventListener("mousemove", event => {
+        cards.forEach(card => {
 
-            if (window.matchMedia("(max-width: 700px)").matches) {
-                return;
-            }
+            card.addEventListener("pointermove", event => {
 
-            const rect = card.getBoundingClientRect();
+                const rect = card.getBoundingClientRect();
 
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
 
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
 
-            const rotateX = ((y - centerY) / centerY) * -7;
-            const rotateY = ((x - centerX) / centerX) * 7;
+                const rotateX = ((y - centerY) / centerY) * -12;
+                const rotateY = ((x - centerX) / centerX) * 12;
 
-            card.style.transform =
-                `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+                card.style.setProperty("--rotate-x", `${rotateX}deg`);
+                card.style.setProperty("--rotate-y", `${rotateY}deg`);
+
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+
+                card.classList.add("card-active");
+
+            });
+
+            card.addEventListener("pointerleave", () => {
+
+                card.style.setProperty("--rotate-x", "0deg");
+                card.style.setProperty("--rotate-y", "0deg");
+
+                card.classList.remove("card-active");
+
+            });
 
         });
 
-        card.addEventListener("mouseleave", () => {
-            card.style.transform = "";
+    }
+
+
+    // ======================================
+    // 2. GLOBAL NEON POINTER
+    // ======================================
+
+    if (!reducedMotion && hasFinePointer) {
+
+        document.addEventListener("pointermove", event => {
+
+            root.style.setProperty(
+                "--pointer-x",
+                `${event.clientX}px`
+            );
+
+            root.style.setProperty(
+                "--pointer-y",
+                `${event.clientY}px`
+            );
+
+        }, { passive: true });
+
+    }
+
+
+    // ======================================
+    // 3. HERO PARALLAX
+    // ======================================
+
+    const heroVisual = document.querySelector(".hero-visual");
+
+    if (heroVisual && !reducedMotion && hasFinePointer) {
+
+        heroVisual.addEventListener("pointermove", event => {
+
+            const rect = heroVisual.getBoundingClientRect();
+
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+            heroVisual.style.setProperty(
+                "--hero-rotate-x",
+                `${y * -18}deg`
+            );
+
+            heroVisual.style.setProperty(
+                "--hero-rotate-y",
+                `${x * 18}deg`
+            );
+
         });
 
-    });
+        heroVisual.addEventListener("pointerleave", () => {
+
+            heroVisual.style.setProperty("--hero-rotate-x", "0deg");
+            heroVisual.style.setProperty("--hero-rotate-y", "0deg");
+
+        });
+
+    }
 
 
-    // 2. FLOATING 3D ELEMENTS
+    // ======================================
+    // 4. FLOATING ELEMENTS
+    // ======================================
 
-    const floatingElements =
-        document.querySelectorAll(".float-3d");
-
-    floatingElements.forEach((element, index) => {
-        element.style.animationDelay = `${index * 0.5}s`;
-    });
-
-
-    // 3. SCROLL REVEAL
-
-    const revealElements = document.querySelectorAll(
-        ".card, .section-title, .info-box, .page-header"
+    const floatingElements = document.querySelectorAll(
+        ".float-3d, .hero-orb"
     );
 
-    if ("IntersectionObserver" in window) {
+    floatingElements.forEach((element, index) => {
+
+        element.style.setProperty(
+            "--float-delay",
+            `${index * -0.7}s`
+        );
+
+    });
+
+
+    // ======================================
+    // 5. SCROLL REVEAL
+    // ======================================
+
+    const revealElements = document.querySelectorAll(
+        ".card, .section-title, .info-box, .page-header, .hero-content"
+    );
+
+    if (!reducedMotion && "IntersectionObserver" in window) {
 
         const observer = new IntersectionObserver(entries => {
 
@@ -77,9 +172,17 @@ document.addEventListener("DOMContentLoaded", () => {
             threshold: 0.12
         });
 
-        revealElements.forEach(element => {
+        revealElements.forEach((element, index) => {
+
             element.classList.add("reveal");
+
+            element.style.setProperty(
+                "--reveal-delay",
+                `${(index % 3) * 120}ms`
+            );
+
             observer.observe(element);
+
         });
 
     } else {
@@ -91,19 +194,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // 4. BACK TO TOP BUTTON
+    // ======================================
+    // 6. BACK TO TOP
+    // ======================================
 
     const topButton = document.createElement("button");
 
     topButton.type = "button";
     topButton.className = "back-to-top";
     topButton.textContent = "↑";
+
     topButton.setAttribute(
         "aria-label",
         "بازگشت به بالای صفحه"
     );
 
-    document.body.appendChild(topButton);
+    body.appendChild(topButton);
 
     window.addEventListener("scroll", () => {
 
@@ -118,18 +224,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.scrollTo({
             top: 0,
-            behavior: "smooth"
+            behavior: reducedMotion ? "auto" : "smooth"
         });
 
     });
 
 
-    // 5. MOBILE MENU
+    // ======================================
+    // 7. MOBILE NAVIGATION
+    // ======================================
 
-    const nav = document.querySelector(".navbar nav");
-    const header = document.querySelector(".navbar");
+    const nav = document.querySelector(
+        ".navbar .nav-links, .navbar nav"
+    );
 
-    if (nav && header) {
+    const navContainer = document.querySelector(
+        ".navbar .nav-content"
+    );
+
+    if (nav && navContainer) {
 
         const menuButton = document.createElement("button");
 
@@ -137,14 +250,10 @@ document.addEventListener("DOMContentLoaded", () => {
         menuButton.className = "mobile-menu-button";
         menuButton.textContent = "☰";
 
-        menuButton.setAttribute(
-            "aria-label",
-            "باز کردن منو"
-        );
-
+        menuButton.setAttribute("aria-label", "باز کردن منو");
         menuButton.setAttribute("aria-expanded", "false");
 
-        header.appendChild(menuButton);
+        navContainer.appendChild(menuButton);
 
         menuButton.addEventListener("click", () => {
 
@@ -157,6 +266,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 String(isOpen)
             );
 
+            menuButton.setAttribute(
+                "aria-label",
+                isOpen ? "بستن منو" : "باز کردن منو"
+            );
+
         });
 
         nav.querySelectorAll("a").forEach(link => {
@@ -167,10 +281,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 menuButton.textContent = "☰";
 
-                menuButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+                menuButton.setAttribute("aria-expanded", "false");
+                menuButton.setAttribute("aria-label", "باز کردن منو");
 
             });
 
@@ -179,26 +291,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // 6. NEON POINTER GLOW
+    // ======================================
+    // 8. ACTIVE PAGE LINK
+    // ======================================
 
-    if (window.matchMedia(
-        "(hover: hover) and (pointer: fine)"
-    ).matches) {
+    const currentPage = window.location.pathname.split("/").pop() || "index.html";
 
-        document.addEventListener("mousemove", event => {
+    document.querySelectorAll(".nav-links a, .navbar nav a").forEach(link => {
 
-            document.documentElement.style.setProperty(
-                "--pointer-x",
-                `${event.clientX}px`
-            );
+        const linkPage = link.getAttribute("href");
 
-            document.documentElement.style.setProperty(
-                "--pointer-y",
-                `${event.clientY}px`
-            );
+        if (linkPage === currentPage) {
+            link.classList.add("active");
+            link.setAttribute("aria-current", "page");
+        }
 
-        }, { passive: true });
+    });
 
-    }
+
+    // ======================================
+    // 9. PAGE READY
+    // ======================================
+
+    body.classList.add("sana-ready");
+
+    console.log("SanaDemo Ultimate 3D Engine Loaded!");
 
 });
