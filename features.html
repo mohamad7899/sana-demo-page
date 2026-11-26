@@ -1,111 +1,441 @@
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b18">
-    <meta name="description" content="آشنایی با امکانات و قابلیت‌های پروژه آموزشی SanaDemo.">
-    <title>SanaDemo | امکانات</title>
+    <meta name="theme-color" content="#080b1c">
+
+    <meta name="description"
+          content="معرفی امکانات، طراحی سه‌بعدی، مانیتورینگ و قابلیت‌های پروژه مستقل SanaDemo.">
+
+    <title>SanaDemo | امکانات پیشرفته</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .page-header {
+            padding-top: 90px;
+            padding-bottom: 45px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            margin: 20px 0;
+        }
+
+        .page-header h1 span {
+            background: linear-gradient(90deg, #00e5ff, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .page-header p {
+            color: #aab3cc;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 9px 20px;
+            border: 1px solid rgba(0, 229, 255, .35);
+            border-radius: 30px;
+            color: #00e5ff;
+            background: rgba(0, 229, 255, .08);
+        }
+
+        .features-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            perspective: 1200px;
+        }
+
+        .features-page-grid .card {
+            min-height: 220px;
+            transform-style: preserve-3d;
+        }
+
+        .features-page-grid .card:hover {
+            transform: translateY(-14px) scale(1.04);
+        }
+
+        .features-page-grid .card-icon {
+            width: 62px;
+            height: 62px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 17px;
+            font-size: 2rem;
+            background: rgba(0, 229, 255, .1);
+            border: 1px solid rgba(0, 229, 255, .2);
+            box-shadow: 0 0 22px rgba(0, 229, 255, .12);
+            margin-bottom: 18px;
+            transform: translateZ(25px);
+        }
+
+        .features-page-grid .card h3 {
+            color: #f4f7ff;
+            margin-bottom: 10px;
+        }
+
+        .features-page-grid .card p {
+            color: #aab3cc;
+            font-size: .9rem;
+        }
+
+        .feature-detail-section {
+            padding-top: 45px;
+            padding-bottom: 45px;
+        }
+
+        .feature-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-detail {
+            padding: 23px;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .045);
+            backdrop-filter: blur(14px);
+            transition: .3s ease;
+        }
+
+        .feature-detail:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0, 229, 255, .5);
+            box-shadow: 0 15px 35px rgba(0, 229, 255, .1);
+        }
+
+        .feature-detail h3 {
+            margin-bottom: 10px;
+            color: #00e5ff;
+        }
+
+        .feature-detail p {
+            color: #aab3cc;
+            font-size: .9rem;
+        }
+
+        .features-info {
+            margin-top: 50px;
+            margin-bottom: 35px;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .features-info p {
+            color: #aab3cc;
+            margin: 12px 0 20px;
+        }
+
+        .features-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        @media (max-width: 650px) {
+            .page-header {
+                padding-top: 55px;
+            }
+
+            .features-page-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .features-page-grid .card,
+            .feature-detail {
+                transition: none !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<header class="navbar">
-    <div class="container nav-content">
-        <a href="index.html" class="brand">✦ Sana<span>Demo</span></a>
-
-        <nav class="nav-links">
-            <a href="index.html">خانه</a>
-            <a href="features.html">امکانات</a>
-            <a href="about.html">درباره ما</a>
-            <a href="contact.html">ارتباط</a>
-        </nav>
+    <!-- پس زمینه متحرک -->
+    <div class="background-effects" aria-hidden="true">
+        <div class="bg-orb orb-one"></div>
+        <div class="bg-orb orb-two"></div>
+        <div class="bg-orb orb-three"></div>
     </div>
-</header>
 
-<main>
-    <section class="page-header container">
-        <span class="hero-tag">⚡ امکانات پروژه</span>
-        <h1>قابلیت‌های <span>SanaDemo</span></h1>
-        <p>نگاهی به امکانات طراحی و فناوری‌های استفاده‌شده در پروژه.</p>
-    </section>
+    <!-- منوی اصلی -->
+    <header class="navbar">
+        <div class="container nav-content">
 
-    <section class="section container">
-        <div class="grid">
-
-            <article class="card">
-                <div class="card-icon">💎</div>
-                <h3>Glassmorphism</h3>
-                <p>استفاده از جلوه‌های شیشه‌ای، شفافیت و پس‌زمینه‌های محو.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🌈</div>
-                <h3>Neon Design</h3>
-                <p>ترکیب رنگ‌های درخشان و نورپردازی مدرن در بخش‌های مختلف سایت.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🧊</div>
-                <h3>3D Effects</h3>
-                <p>استفاده از جلوه‌های عمق و حرکت برای ایجاد تجربه بصری جذاب‌تر.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🖱️</div>
-                <h3>Interactive UI</h3>
-                <p>تعامل با المان‌ها و افکت‌های حرکتی هنگام حرکت نشانگر موس.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">📱</div>
-                <h3>Responsive Design</h3>
-                <p>سازگاری رابط کاربری با صفحه‌نمایش موبایل، تبلت و دسکتاپ.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🚀</div>
-                <h3>Modern Animation</h3>
-                <p>استفاده از انیمیشن‌ها و افکت‌های ورود برای نمایش بهتر محتوا.</p>
-            </article>
-
-        </div>
-    </section>
-
-    <section class="section container">
-        <div class="info-box">
-            <h2>حریم خصوصی و امنیت</h2>
-            <p>
-                این پروژه برای نمایش طراحی رابط کاربری ساخته شده است.
-                اطلاعات شخصی کاربران را دریافت یا ذخیره نمی‌کند و
-                هیچ سیستم ورود یا ثبت‌نامی ندارد.
-            </p>
-        </div>
-    </section>
-
-    <section class="container section">
-        <div class="info-box">
-            <h2>استفاده از خدمات رسمی</h2>
-            <p>
-                برای دسترسی به خدمات واقعی سامانه ثنا،
-                از وب‌سایت رسمی آن استفاده کنید.
-            </p>
-
-            <a href="https://sana.adliran.ir"
-               class="btn"
-               target="_blank"
-               rel="noopener noreferrer">
-                وب‌سایت رسمی ثنا
+            <a href="index.html" class="brand">
+                ✦ Sana<span>Demo</span>
             </a>
+
+            <button class="menu-toggle"
+                    type="button"
+                    aria-label="باز کردن منو"
+                    aria-expanded="false"
+                    aria-controls="main-navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="nav-links" id="main-navigation">
+                <a href="index.html">خانه</a>
+                <a href="features.html" class="active">امکانات</a>
+                <a href="about.html">درباره ما</a>
+                <a href="contact.html">ارتباط</a>
+            </nav>
+
         </div>
-    </section>
-</main>
+    </header>
 
-<footer class="footer">
-    <p>© 2026 SanaDemo | یک پروژه مستقل و آموزشی</p>
-</footer>
+    <main>
 
-<script src="script.js" defer></script>
+        <!-- عنوان صفحه -->
+        <section class="page-header container">
+
+            <span class="hero-tag">
+                ⚡ امکانات نسخه 4.0
+            </span>
+
+            <h1>
+                قابلیت‌های
+                <span>SanaDemo</span>
+            </h1>
+
+            <p>
+                ترکیبی از طراحی شیشه‌ای، نورپردازی نئونی،
+                جلوه‌های سه‌بعدی و فناوری‌های مدرن وب.
+            </p>
+
+        </section>
+
+
+        <!-- کارت‌های امکانات -->
+        <section class="section container">
+
+            <div class="section-heading">
+                <h2 class="gradient-text">امکانات اصلی</h2>
+                <p>برای مشاهده افکت‌ها نشانگر موس را روی کارت‌ها حرکت دهید.</p>
+            </div>
+
+            <div class="features-page-grid">
+
+                <article class="card">
+                    <div class="card-icon">💎</div>
+                    <h3>Glassmorphism</h3>
+                    <p>
+                        طراحی شیشه‌ای با شفافیت، پس‌زمینه محو
+                        و لایه‌های بصری مدرن.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">🌈</div>
+                    <h3>Neon Design</h3>
+                    <p>
+                        نورپردازی نئونی و ترکیب رنگ‌های درخشان
+                        در قسمت‌های مختلف رابط کاربری.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">🧊</div>
+                    <h3>Interactive 3D</h3>
+                    <p>
+                        چرخش سه‌بعدی کارت‌ها متناسب با حرکت موس
+                        و ایجاد حس عمق در رابط کاربری.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">🖱️</div>
+                    <h3>Smart Hover</h3>
+                    <p>
+                        جلو آمدن کارت، تغییر زاویه و افزایش نور
+                        هنگام قرار گرفتن نشانگر روی آن.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">📱</div>
+                    <h3>Responsive Design</h3>
+                    <p>
+                        سازگاری طراحی با نمایشگر موبایل،
+                        تبلت و رایانه‌های رومیزی.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">🚀</div>
+                    <h3>Modern Animation</h3>
+                    <p>
+                        انیمیشن‌های ورود، حرکت شناور و
+                        افکت‌های نرم هنگام پیمایش صفحه.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">📡</div>
+                    <h3>Network Monitor</h3>
+                    <p>
+                        نمایش وضعیت اتصال شبکه و اطلاعات
+                        عمومی قابل دسترس مرورگر.
+                    </p>
+                </article>
+
+                <article class="card">
+                    <div class="card-icon">🕒</div>
+                    <h3>Live Dashboard</h3>
+                    <p>
+                        نمایش ساعت، تاریخ، زبان مرورگر
+                        و برخی اطلاعات محیط دستگاه.
+                    </p>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- قابلیت های فنی -->
+        <section class="feature-detail-section container">
+
+            <div class="section-heading">
+                <h2 class="gradient-text">مرکز قابلیت‌های فنی</h2>
+                <p>اطلاعات عمومی که پروژه می‌تواند در مرورگر نمایش دهد.</p>
+            </div>
+
+            <div class="feature-detail-grid">
+
+                <article class="feature-detail">
+                    <h3>🖥️ اطلاعات دستگاه</h3>
+                    <p>
+                        تشخیص تقریبی نوع دستگاه و سیستم‌عامل
+                        با استفاده از اطلاعات مرورگر.
+                    </p>
+                </article>
+
+                <article class="feature-detail">
+                    <h3>🌐 وضعیت اینترنت</h3>
+                    <p>
+                        بررسی وضعیت آنلاین یا آفلاین بودن
+                        مرورگر و اطلاعات اتصال در صورت پشتیبانی.
+                    </p>
+                </article>
+
+                <article class="feature-detail">
+                    <h3>🌍 IP عمومی</h3>
+                    <p>
+                        دریافت IP عمومی از یک سرویس خارجی.
+                        این درخواست اطلاعات IP را به آن سرویس ارسال می‌کند.
+                    </p>
+                </article>
+
+                <article class="feature-detail">
+                    <h3>⚡ عملکرد صفحه</h3>
+                    <p>
+                        نمایش برخی داده‌های زمان بارگذاری
+                        از طریق Performance API مرورگر.
+                    </p>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- حریم خصوصی -->
+        <section class="container section">
+
+            <div class="info-box card features-info">
+
+                <h2 class="gradient-text">
+                    حریم خصوصی و امنیت
+                </h2>
+
+                <p>
+                    SanaDemo یک پروژه مستقل و آموزشی است.
+                    اطلاعات نمایش داده‌شده از قابلیت‌های مرورگر دریافت می‌شوند.
+                    این پروژه سیستم ورود و ثبت‌نام ندارد و اطلاعات را
+                    در پایگاه داده اختصاصی ذخیره نمی‌کند.
+                    برای نمایش IP عمومی از سرویس خارجی استفاده می‌شود.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- خدمات رسمی -->
+        <section class="container section">
+
+            <div class="info-box card features-info">
+
+                <h2 class="gradient-text">
+                    دسترسی به خدمات رسمی
+                </h2>
+
+                <p>
+                    SanaDemo وابسته به سامانه قضایی نیست و خدمات رسمی ارائه نمی‌کند.
+                    برای استفاده از خدمات واقعی ثنا، به وب‌سایت رسمی مراجعه کنید.
+                </p>
+
+                <div class="features-actions">
+
+                    <a href="https://sana.adliran.ir"
+                       class="btn btn-primary"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        وب‌سایت رسمی ثنا
+                    </a>
+
+                    <a href="index.html" class="btn btn-outline">
+                        بازگشت به صفحه اصلی
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- فوتر -->
+    <footer class="footer">
+        <div class="container footer-content">
+
+            <a href="index.html" class="brand">
+                Sana<span>Demo</span>
+            </a>
+
+            <p>
+                SanaDemo Ultimate 4.0
+                | پروژه مستقل و آموزشی
+            </p>
+
+            <p>
+                © 2026 - تمامی حقوق محفوظ است.
+            </p>
+
+        </div>
+    </footer>
+
+
+    <script src="script.js" defer></script>
+
 </body>
 </html>
