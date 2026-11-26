@@ -1,441 +1,379 @@
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b1c">
-
-    <meta name="description"
-          content="معرفی امکانات، طراحی سه‌بعدی، مانیتورینگ و قابلیت‌های پروژه مستقل SanaDemo.">
-
-    <title>SanaDemo | امکانات پیشرفته</title>
-
+    <meta name="theme-color" content="#080b1a">
+    <title>SanaDemo | امکانات هوشمند</title>
     <link rel="stylesheet" href="style.css">
 
     <style>
-        .page-header {
-            padding-top: 90px;
-            padding-bottom: 45px;
-            text-align: center;
-        }
-
-        .page-header h1 {
-            font-size: clamp(2rem, 5vw, 3.4rem);
-            margin: 20px 0;
-        }
-
-        .page-header h1 span {
-            background: linear-gradient(90deg, #00e5ff, #a855f7, #ec4899);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .page-header p {
-            color: #aab3cc;
-            max-width: 650px;
-            margin: auto;
-        }
-
-        .hero-tag {
-            display: inline-block;
-            padding: 9px 20px;
-            border: 1px solid rgba(0, 229, 255, .35);
-            border-radius: 30px;
-            color: #00e5ff;
-            background: rgba(0, 229, 255, .08);
-        }
-
         .features-page-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
-            perspective: 1200px;
-        }
-
-        .features-page-grid .card {
-            min-height: 220px;
-            transform-style: preserve-3d;
-        }
-
-        .features-page-grid .card:hover {
-            transform: translateY(-14px) scale(1.04);
-        }
-
-        .features-page-grid .card-icon {
-            width: 62px;
-            height: 62px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 17px;
-            font-size: 2rem;
-            background: rgba(0, 229, 255, .1);
-            border: 1px solid rgba(0, 229, 255, .2);
-            box-shadow: 0 0 22px rgba(0, 229, 255, .12);
-            margin-bottom: 18px;
-            transform: translateZ(25px);
-        }
-
-        .features-page-grid .card h3 {
-            color: #f4f7ff;
-            margin-bottom: 10px;
-        }
-
-        .features-page-grid .card p {
-            color: #aab3cc;
-            font-size: .9rem;
-        }
-
-        .feature-detail-section {
-            padding-top: 45px;
-            padding-bottom: 45px;
-        }
-
-        .feature-detail-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 20px;
+            gap: 22px;
+            margin-top: 30px;
         }
 
-        .feature-detail {
-            padding: 23px;
-            border: 1px solid rgba(255, 255, 255, .12);
-            border-radius: 18px;
-            background: rgba(255, 255, 255, .045);
-            backdrop-filter: blur(14px);
-            transition: .3s ease;
+        .weather-card {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 229, 255, .35);
+            transition: .35s ease;
         }
 
-        .feature-detail:hover {
-            transform: translateY(-8px);
-            border-color: rgba(0, 229, 255, .5);
-            box-shadow: 0 15px 35px rgba(0, 229, 255, .1);
+        .weather-card:hover {
+            transform: translateY(-12px) scale(1.025);
+            box-shadow: 0 0 35px rgba(0, 229, 255, .25);
         }
 
-        .feature-detail h3 {
-            margin-bottom: 10px;
+        .weather-icon {
+            font-size: 52px;
+            margin-bottom: 15px;
+            animation: weatherFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes weatherFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-12px) rotate(5deg); }
+        }
+
+        .weather-temperature {
+            font-size: 38px;
+            font-weight: bold;
             color: #00e5ff;
         }
 
-        .feature-detail p {
-            color: #aab3cc;
-            font-size: .9rem;
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 22px;
         }
 
-        .features-info {
-            margin-top: 50px;
-            margin-bottom: 35px;
+        .weather-detail {
+            padding: 17px;
+            border-radius: 15px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.1);
+        }
+
+        .weather-detail strong {
+            display: block;
+            margin-top: 8px;
+            color: #00e5ff;
+            font-size: 19px;
+        }
+
+        .weather-panel {
+            display: none;
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 22px;
+            background: rgba(13, 20, 45, .8);
+            border: 1px solid rgba(0,229,255,.25);
+            animation: panelAppear .4s ease;
+        }
+
+        .weather-panel.active {
+            display: block;
+        }
+
+        @keyframes panelAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .weather-status {
+            color: #aab7d8;
+            margin-top: 12px;
+            line-height: 1.9;
+        }
+
+        .weather-action {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 11px 20px;
+            border-radius: 12px;
+            background: linear-gradient(120deg, #00c8ff, #7655ff);
+            color: white;
+            border: 0;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .weather-forecast {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .forecast-item {
+            padding: 15px;
             text-align: center;
-            padding: 30px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.05);
         }
 
-        .features-info p {
-            color: #aab3cc;
-            margin: 12px 0 20px;
+        .feature-page-heading {
+            text-align: center;
+            margin: 65px 0 30px;
         }
 
-        .features-actions {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 14px;
+        .feature-page-heading h1 {
+            margin-bottom: 12px;
         }
 
-        @media (max-width: 650px) {
-            .page-header {
-                padding-top: 55px;
-            }
-
-            .features-page-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .features-page-grid .card,
-            .feature-detail {
-                transition: none !important;
-            }
+        .weather-note {
+            font-size: 13px;
+            color: #aab7d8;
+            line-height: 1.9;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- پس زمینه متحرک -->
-    <div class="background-effects" aria-hidden="true">
-        <div class="bg-orb orb-one"></div>
-        <div class="bg-orb orb-two"></div>
-        <div class="bg-orb orb-three"></div>
+<div class="background-effects">
+    <div class="bg-orb orb-one"></div>
+    <div class="bg-orb orb-two"></div>
+    <div class="bg-orb orb-three"></div>
+</div>
+
+<header class="navbar">
+    <div class="container nav-content">
+        <a href="index.html" class="brand">✦ Sana<span>Demo</span></a>
+
+        <button class="menu-toggle" aria-label="باز کردن منو"
+                aria-controls="main-navigation" aria-expanded="false">
+            ☰
+        </button>
+
+        <nav class="nav-links" id="main-navigation">
+            <a href="index.html">خانه</a>
+            <a href="features.html" class="active">امکانات</a>
+            <a href="about.html">درباره ما</a>
+            <a href="contact.html">ارتباط</a>
+        </nav>
     </div>
+</header>
 
-    <!-- منوی اصلی -->
-    <header class="navbar">
-        <div class="container nav-content">
+<main class="container">
 
-            <a href="index.html" class="brand">
-                ✦ Sana<span>Demo</span>
-            </a>
+    <section class="feature-page-heading section">
+        <span class="hero-badge">SMART FEATURES</span>
+        <h1 class="gradient-text">مرکز امکانات هوشمند</h1>
+        <p>بررسی قابلیت‌ها، وضعیت دستگاه و اطلاعات زنده محیط</p>
+    </section>
 
-            <button class="menu-toggle"
-                    type="button"
-                    aria-label="باز کردن منو"
-                    aria-expanded="false"
-                    aria-controls="main-navigation">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+    <!-- WEATHER -->
+    <section class="section" id="weather-section">
 
-            <nav class="nav-links" id="main-navigation">
-                <a href="index.html">خانه</a>
-                <a href="features.html" class="active">امکانات</a>
-                <a href="about.html">درباره ما</a>
-                <a href="contact.html">ارتباط</a>
-            </nav>
+        <div class="section-heading">
+            <span class="hero-badge">LIVE WEATHER</span>
+            <h2>مرکز آب‌وهوای زنده</h2>
+            <p>اطلاعات آب‌وهوایی منطقه شما با استفاده از موقعیت مکانی مرورگر</p>
+        </div>
+
+        <div class="features-page-grid">
+
+            <article class="card weather-card" id="weather-card"
+                     role="button" tabindex="0"
+                     aria-controls="weather-panel" aria-expanded="false">
+
+                <div class="weather-icon" id="weather-icon">🌤️</div>
+
+                <h3>آب‌وهوای منطقه شما</h3>
+
+                <div class="weather-temperature" id="weather-temperature">
+                    --°
+                </div>
+
+                <p id="weather-description">در انتظار دریافت اطلاعات...</p>
+
+                <p id="weather-location">موقعیت مکانی هنوز مشخص نشده</p>
+
+                <p class="weather-status" id="weather-card-status">
+                    برای دریافت آب‌وهوا، دسترسی موقعیت مکانی را مجاز کنید.
+                </p>
+
+                <button class="weather-action" type="button" id="weather-open">
+                    مشاهده جزئیات
+                </button>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🖥️</div>
+                <h3>مانیتور دستگاه</h3>
+                <p id="feature-live-device">در حال بررسی دستگاه...</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🌐</div>
+                <h3>وضعیت اینترنت</h3>
+                <p id="feature-live-network">در حال بررسی اتصال...</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">📡</div>
+                <h3>نوع اتصال</h3>
+                <p id="feature-live-connection">در حال بررسی...</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🌍</div>
+                <h3>زبان مرورگر</h3>
+                <p id="feature-live-language">در حال بررسی...</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">⚡</div>
+                <h3>زمان بارگذاری</h3>
+                <p id="feature-live-load">در حال بررسی...</p>
+            </article>
 
         </div>
-    </header>
 
-    <main>
+        <!-- WEATHER DETAILS -->
+        <div class="weather-panel" id="weather-panel">
 
-        <!-- عنوان صفحه -->
-        <section class="page-header container">
+            <h2>جزئیات آب‌وهوای منطقه</h2>
 
-            <span class="hero-tag">
-                ⚡ امکانات نسخه 4.0
-            </span>
-
-            <h1>
-                قابلیت‌های
-                <span>SanaDemo</span>
-            </h1>
-
-            <p>
-                ترکیبی از طراحی شیشه‌ای، نورپردازی نئونی،
-                جلوه‌های سه‌بعدی و فناوری‌های مدرن وب.
+            <p id="weather-detail-status" class="weather-status">
+                اطلاعات آب‌وهوا هنوز دریافت نشده است.
             </p>
 
-        </section>
+            <div class="weather-details">
 
+                <div class="weather-detail">
+                    🌡️ دمای فعلی
+                    <strong id="weather-detail-temp">--</strong>
+                </div>
 
-        <!-- کارت‌های امکانات -->
-        <section class="section container">
+                <div class="weather-detail">
+                    💧 رطوبت
+                    <strong id="weather-humidity">--</strong>
+                </div>
 
-            <div class="section-heading">
-                <h2 class="gradient-text">امکانات اصلی</h2>
-                <p>برای مشاهده افکت‌ها نشانگر موس را روی کارت‌ها حرکت دهید.</p>
-            </div>
+                <div class="weather-detail">
+                    💨 سرعت باد
+                    <strong id="weather-wind">--</strong>
+                </div>
 
-            <div class="features-page-grid">
+                <div class="weather-detail">
+                    🌡️ احساس دما
+                    <strong id="weather-feels">--</strong>
+                </div>
 
-                <article class="card">
-                    <div class="card-icon">💎</div>
-                    <h3>Glassmorphism</h3>
-                    <p>
-                        طراحی شیشه‌ای با شفافیت، پس‌زمینه محو
-                        و لایه‌های بصری مدرن.
-                    </p>
-                </article>
+                <div class="weather-detail">
+                    🌧️ احتمال بارش
+                    <strong id="weather-rain">--</strong>
+                </div>
 
-                <article class="card">
-                    <div class="card-icon">🌈</div>
-                    <h3>Neon Design</h3>
-                    <p>
-                        نورپردازی نئونی و ترکیب رنگ‌های درخشان
-                        در قسمت‌های مختلف رابط کاربری.
-                    </p>
-                </article>
-
-                <article class="card">
-                    <div class="card-icon">🧊</div>
-                    <h3>Interactive 3D</h3>
-                    <p>
-                        چرخش سه‌بعدی کارت‌ها متناسب با حرکت موس
-                        و ایجاد حس عمق در رابط کاربری.
-                    </p>
-                </article>
-
-                <article class="card">
-                    <div class="card-icon">🖱️</div>
-                    <h3>Smart Hover</h3>
-                    <p>
-                        جلو آمدن کارت، تغییر زاویه و افزایش نور
-                        هنگام قرار گرفتن نشانگر روی آن.
-                    </p>
-                </article>
-
-                <article class="card">
-                    <div class="card-icon">📱</div>
-                    <h3>Responsive Design</h3>
-                    <p>
-                        سازگاری طراحی با نمایشگر موبایل،
-                        تبلت و رایانه‌های رومیزی.
-                    </p>
-                </article>
-
-                <article class="card">
-                    <div class="card-icon">🚀</div>
-                    <h3>Modern Animation</h3>
-                    <p>
-                        انیمیشن‌های ورود، حرکت شناور و
-                        افکت‌های نرم هنگام پیمایش صفحه.
-                    </p>
-                </article>
-
-                <article class="card">
-                    <div class="card-icon">📡</div>
-                    <h3>Network Monitor</h3>
-                    <p>
-                        نمایش وضعیت اتصال شبکه و اطلاعات
-                        عمومی قابل دسترس مرورگر.
-                    </p>
-                </article>
-
-                <article class="card">
-                    <div class="card-icon">🕒</div>
-                    <h3>Live Dashboard</h3>
-                    <p>
-                        نمایش ساعت، تاریخ، زبان مرورگر
-                        و برخی اطلاعات محیط دستگاه.
-                    </p>
-                </article>
-
-            </div>
-
-        </section>
-
-
-        <!-- قابلیت های فنی -->
-        <section class="feature-detail-section container">
-
-            <div class="section-heading">
-                <h2 class="gradient-text">مرکز قابلیت‌های فنی</h2>
-                <p>اطلاعات عمومی که پروژه می‌تواند در مرورگر نمایش دهد.</p>
-            </div>
-
-            <div class="feature-detail-grid">
-
-                <article class="feature-detail">
-                    <h3>🖥️ اطلاعات دستگاه</h3>
-                    <p>
-                        تشخیص تقریبی نوع دستگاه و سیستم‌عامل
-                        با استفاده از اطلاعات مرورگر.
-                    </p>
-                </article>
-
-                <article class="feature-detail">
-                    <h3>🌐 وضعیت اینترنت</h3>
-                    <p>
-                        بررسی وضعیت آنلاین یا آفلاین بودن
-                        مرورگر و اطلاعات اتصال در صورت پشتیبانی.
-                    </p>
-                </article>
-
-                <article class="feature-detail">
-                    <h3>🌍 IP عمومی</h3>
-                    <p>
-                        دریافت IP عمومی از یک سرویس خارجی.
-                        این درخواست اطلاعات IP را به آن سرویس ارسال می‌کند.
-                    </p>
-                </article>
-
-                <article class="feature-detail">
-                    <h3>⚡ عملکرد صفحه</h3>
-                    <p>
-                        نمایش برخی داده‌های زمان بارگذاری
-                        از طریق Performance API مرورگر.
-                    </p>
-                </article>
-
-            </div>
-
-        </section>
-
-
-        <!-- حریم خصوصی -->
-        <section class="container section">
-
-            <div class="info-box card features-info">
-
-                <h2 class="gradient-text">
-                    حریم خصوصی و امنیت
-                </h2>
-
-                <p>
-                    SanaDemo یک پروژه مستقل و آموزشی است.
-                    اطلاعات نمایش داده‌شده از قابلیت‌های مرورگر دریافت می‌شوند.
-                    این پروژه سیستم ورود و ثبت‌نام ندارد و اطلاعات را
-                    در پایگاه داده اختصاصی ذخیره نمی‌کند.
-                    برای نمایش IP عمومی از سرویس خارجی استفاده می‌شود.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- خدمات رسمی -->
-        <section class="container section">
-
-            <div class="info-box card features-info">
-
-                <h2 class="gradient-text">
-                    دسترسی به خدمات رسمی
-                </h2>
-
-                <p>
-                    SanaDemo وابسته به سامانه قضایی نیست و خدمات رسمی ارائه نمی‌کند.
-                    برای استفاده از خدمات واقعی ثنا، به وب‌سایت رسمی مراجعه کنید.
-                </p>
-
-                <div class="features-actions">
-
-                    <a href="https://sana.adliran.ir"
-                       class="btn btn-primary"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                        وب‌سایت رسمی ثنا
-                    </a>
-
-                    <a href="index.html" class="btn btn-outline">
-                        بازگشت به صفحه اصلی
-                    </a>
-
+                <div class="weather-detail">
+                    ☀️ شاخص UV
+                    <strong id="weather-uv">--</strong>
                 </div>
 
             </div>
 
-        </section>
+            <h3 style="margin-top:30px;">پیش‌بینی روزهای آینده</h3>
 
-    </main>
+            <div class="weather-forecast" id="weather-forecast">
+                <div class="forecast-item">در انتظار اطلاعات...</div>
+            </div>
 
-
-    <!-- فوتر -->
-    <footer class="footer">
-        <div class="container footer-content">
-
-            <a href="index.html" class="brand">
-                Sana<span>Demo</span>
-            </a>
-
-            <p>
-                SanaDemo Ultimate 4.0
-                | پروژه مستقل و آموزشی
+            <p class="weather-note">
+                اطلاعات هواشناسی از سرویس خارجی دریافت می‌شود.
+                موقعیت مکانی فقط با اجازه مرورگر قابل دریافت است.
             </p>
 
-            <p>
-                © 2026 - تمامی حقوق محفوظ است.
-            </p>
+            <button class="weather-action" id="weather-refresh" type="button">
+                دریافت مجدد اطلاعات
+            </button>
 
         </div>
-    </footer>
 
+    </section>
 
-    <script src="script.js" defer></script>
+    <!-- OTHER FEATURES -->
+    <section class="section">
+
+        <div class="section-heading">
+            <span class="hero-badge">OUR FEATURES</span>
+            <h2>سایر قابلیت‌ها</h2>
+        </div>
+
+        <div class="features-page-grid">
+
+            <article class="card">
+                <div class="card-icon">💎</div>
+                <h3>Glassmorphism</h3>
+                <p>طراحی شیشه‌ای و مدرن با افکت محوشدگی.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">✨</div>
+                <h3>Neon Design</h3>
+                <p>نورپردازی نئونی و رنگ‌های پویا.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🌀</div>
+                <h3>Interactive 3D</h3>
+                <p>افکت عمق و حرکت تعاملی کارت‌ها.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🎯</div>
+                <h3>Smart Hover</h3>
+                <p>واکنش کارت‌ها به حرکت نشانگر موس.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>نمایش سازگار با موبایل، تبلت و دسکتاپ.</p>
+            </article>
+
+            <article class="card">
+                <div class="card-icon">🎬</div>
+                <h3>Modern Animation</h3>
+                <p>انیمیشن‌های نرم و پس‌زمینه پویا.</p>
+            </article>
+
+        </div>
+    </section>
+
+    <section class="info-box section">
+        <h3>🔐 حریم خصوصی</h3>
+        <p>
+            دریافت موقعیت مکانی فقط با اجازه مرورگر انجام می‌شود.
+            این پروژه یک دمو مستقل است و اطلاعات موقعیت مکانی را
+            در پایگاه داده اختصاصی ذخیره نمی‌کند.
+        </p>
+    </section>
+
+    <section class="info-box section">
+        <h3>اطلاعیه</h3>
+        <p>
+            SanaDemo یک پروژه آزمایشی و مستقل است و وابستگی رسمی
+            به سامانه‌های دولتی یا قضایی ندارد.
+        </p>
+        <a href="https://sana.adliran.ir" target="_blank"
+           rel="noopener noreferrer">مشاهده سامانه رسمی ثنا</a>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>© 2026 SanaDemo | پروژه آزمایشی و مستقل</p>
+</footer>
+
+<script src="script.js" defer></script>
 
 </body>
 </html>
