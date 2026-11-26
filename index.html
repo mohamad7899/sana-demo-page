@@ -4,101 +4,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b18">
-    <meta name="description" content="SanaDemo یک پروژه آموزشی و مستقل برای معرفی امکانات و طراحی رابط کاربری مدرن است.">
-    <title>SanaDemo | صفحه اصلی</title>
+    <meta name="theme-color" content="#101025">
+
+    <meta name="description" content="SanaDemo یک پروژه آزمایشی مستقل برای نمایش طراحی مدرن، داشبورد تعاملی و امکانات نمایشی وب است.">
+
+    <title>SanaDemo | Ultimate 4.0</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <script src="script.js" defer></script>
 </head>
+
 <body>
 
-<header class="navbar">
-    <div class="container nav-content">
-        <a href="index.html" class="brand">✦ Sana<span>Demo</span></a>
-
-        <nav class="nav-links">
-            <a href="index.html">خانه</a>
-            <a href="features.html">امکانات</a>
-            <a href="about.html">درباره ما</a>
-            <a href="contact.html">ارتباط</a>
-        </nav>
+    <!-- BACKGROUND EFFECTS -->
+    <div class="background-effects" aria-hidden="true">
+        <div class="bg-orb orb-one"></div>
+        <div class="bg-orb orb-two"></div>
+        <div class="bg-orb orb-three"></div>
     </div>
-</header>
 
-<main>
-    <section class="hero container">
-        <div class="hero-content">
-            <span class="hero-tag">✨ تجربه‌ای مدرن در طراحی وب</span>
 
-            <h1>
-                به دنیای
-                <span>SanaDemo</span>
-                خوش آمدید
-            </h1>
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <div class="container nav-content">
 
-            <p>
-                یک پروژه مستقل و آموزشی با طراحی مدرن،
-                جلوه‌های Neon و رابط کاربری شیشه‌ای.
-            </p>
-
-            <div class="hero-actions">
-                <a href="features.html" class="btn">مشاهده امکانات</a>
-                <a href="about.html" class="btn btn-outline">درباره پروژه</a>
-            </div>
-        </div>
-
-        <div class="hero-visual float-3d">
-            <div class="hero-orb">
-                <span>✦</span>
-            </div>
-        </div>
-    </section>
-
-    <section class="section container">
-        <h2 class="section-title">ویژگی‌های SanaDemo</h2>
-
-        <div class="grid">
-            <article class="card">
-                <div class="card-icon">🎨</div>
-                <h3>طراحی مدرن</h3>
-                <p>ترکیبی از رنگ‌های Neon و جلوه‌های شیشه‌ای برای تجربه‌ای متفاوت.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">📱</div>
-                <h3>طراحی واکنش‌گرا</h3>
-                <p>نمایش مناسب صفحات در اندازه‌های مختلف موبایل، تبلت و کامپیوتر.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">⚡</div>
-                <h3>تجربه سریع</h3>
-                <p>ساختار سبک و ساده با استفاده از HTML، CSS و JavaScript.</p>
-            </article>
-        </div>
-    </section>
-
-    <section class="container section">
-        <div class="info-box">
-            <h2>اطلاعیه مهم</h2>
-            <p>
-                SanaDemo یک پروژه مستقل و آموزشی است و هیچ وابستگی رسمی
-                به سامانه ثنا یا قوه قضاییه ندارد.
-                برای استفاده از خدمات رسمی، فقط از وب‌سایت اصلی استفاده کنید.
-            </p>
-            <a href="https://sana.adliran.ir"
-               class="btn"
-               target="_blank"
-               rel="noopener noreferrer">
-                ورود به وب‌سایت رسمی ثنا
+            <a href="index.html" class="brand">
+                Sana<span>Demo</span>
             </a>
+
+            <nav class="nav-links">
+                <a href="index.html" class="active">خانه</a>
+                <a href="features.html">امکانات</a>
+                <a href="about.html">درباره ما</a>
+                <a href="contact.html">ارتباط</a>
+            </nav>
+
         </div>
-    </section>
-</main>
+    </header>
 
-<footer class="footer">
-    <p>© 2026 SanaDemo | یک پروژه مستقل و آموزشی</p>
-</footer>
 
-<script src="script.js" defer></script>
+    <main>
+
+        <!-- HERO -->
+        <section class="hero section">
+
+            <div class="container hero-grid">
+
+                <div class="hero-content">
+
+                    <span class="hero-badge">
+                        ✦ ULTIMATE EXPERIENCE 4.0
+                    </span>
+
+                    <h1>
+                        به دنیای
+                        <span class="gradient-text">SanaDemo</span>
+                        خوش آمدید
+                    </h1>
+
+                    <p>
+                        تجربه‌ای متفاوت از طراحی مدرن وب،
+                        جلوه‌های سه‌بعدی، داشبورد هوشمند
+                        و رابط کاربری تعاملی.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <a href="features.html" class="btn btn-primary">
+                            مشاهده امکانات
+                        </a>
+
+                        <a href="about.html" class="btn btn-secondary">
+                            درباره پروژه
+                        </a>
+
+                    </div>
+
+                    <div class="hero-stats">
+
+                        <div>
+                            <strong>4.0</strong>
+                            <span>نسخه پروژه</span>
+                        </div>
+
+                        <div>
+                            <strong>3D</strong>
+                            <span>جلوه‌های بصری</span>
+                        </div>
+
+                        <div>
+                            <strong>24/7</strong>
+                            <span>دسترسی وب‌سایت</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 3D VISUAL -->
+                <div class="hero-visual float-3d">
+
+                    <div class="hero-orb">
+
+                        <div class="orb-ring ring-one"></div>
+                        <div class="orb-ring ring-two"></div>
+                        <div class="orb-ring ring-three"></div>
+
+                        <div class="orb-core">
+                            <span>S</span>
+                        </div>
+
+                    </div>
+
+                    <div class="floating-label label-one">
+                        <span>✦</span> SMART UI
+                    </div>
+
+                    <div class="floating-label label-two">
+                        <span>◈</span> 3D DESIGN
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DASHBOARD -->
+        <section class="section dashboard-section">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <span class="section-eyebrow">
+                        LIVE DASHBOARD
+                    </span>
+
+                    <h2>داشبورد هوشمند</h2>
+
+                    <p>
+                        نمای کلی وضعیت و امکانات نمایشی SanaDemo
+                    </p>
+
+                </div>
+
+
+                <div class="dashboard-grid">
+
+                    <article class="card dashboard-card">
+
+                        <div class="dashboard-icon">🌐</div>
+
+                        <span>وضعیت وب‌سایت</span>
+
+                        <strong id="site-status">
+                            در حال بررسی
+                        </strong>
+
+                        <small>وضعیت بارگذاری صفحه</small>
+
+                    </article>
+
+
+                    <article class="card dashboard-card">
+
+                        <div class="dashboard-icon">📱</div>
+
+                        <span>نوع دستگاه</span>
+
+                        <strong id="dashboard-device">
+                            در حال بررسی
+                        </strong>
+
+                        <small>تشخیص دستگاه فعلی</small>
+
+                    </article>
+
+
+                    <article class="card dashboard-card">
+
+                        <div class="dashboard-icon">🕒</div>
+
+                        <span>ساعت محلی</span>
+
+                        <strong id="live-clock">
+                            --:--:--
+                        </strong>
+
+                        <small>ساعت مرورگر شما</small>
+
+                    </article>
+
+
+                    <article class="card dashboard-card">
+
+                        <div class="dashboard-icon">📅</div>
+
+                        <span>تاریخ محلی</span>
+
+                        <strong id="live-date">
+                            در حال بررسی
+                        </strong>
+
+                        <small>تاریخ دستگاه شما</small>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MONITORING -->
+        <section class="section monitoring-section">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <span class="section-eyebrow">
+                        SYSTEM MONITORING
+                    </span>
+
+                    <h2>مرکز مانیتورینگ</h2>
+
+                    <p>
+                        بررسی وضعیت عملکرد صفحه و اتصال شبکه
+                    </p>
+
+                </div>
+
+
+                <div class="monitor-panel card">
+
+                    <div class="monitor-header">
+
+                        <div>
+                            <h3>وضعیت سیستم</h3>
+                            <p>اطلاعات عمومی و نمایشی مرورگر</p>
+                        </div>
+
+                        <span class="status-indicator">
+                            ● فعال
+                        </span>
+
+                    </div>
+
+
+                    <div class="monitor-grid">
+
+                        <div class="monitor-item">
+                            <span>اتصال اینترنت</span>
+                            <strong id="network-status">
+                                در حال بررسی
+                            </strong>
+                        </div>
+
+                        <div class="monitor-item">
+                            <span>نوع اتصال</span>
+                            <strong id="connection-type">
+                                نامشخص
+                            </strong>
+                        </div>
+
+                        <div class="monitor-item">
+                            <span>زمان بارگذاری</span>
+                            <strong id="page-load-time">
+                                در حال بررسی
+                            </strong>
+                        </div>
+
+                        <div class="monitor-item">
+                            <span>زبان مرورگر</span>
+                            <strong id="browser-language">
+                                در حال بررسی
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <p class="monitor-note">
+                        مقادیر وابسته به پشتیبانی مرورگر هستند
+                        و ممکن است در بعضی دستگاه‌ها در دسترس نباشند.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FEATURES -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="section-title">
+
+                    <span class="section-eyebrow">
+                        OUR FEATURES
+                    </span>
+
+                    <h2>ویژگی‌های SanaDemo</h2>
+
+                    <p>
+                        امکاناتی برای تجربه یک رابط کاربری مدرن
+                    </p>
+
+                </div>
+
+
+                <div class="features-grid">
+
+                    <article class="card">
+
+                        <div class="feature-icon">✨</div>
+
+                        <h3>طراحی سه‌بعدی</h3>
+
+                        <p>
+                            جلوه‌های بصری تعاملی و انیمیشن‌های مدرن.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <div class="feature-icon">📊</div>
+
+                        <h3>داشبورد هوشمند</h3>
+
+                        <p>
+                            نمایش وضعیت و اطلاعات عمومی دستگاه.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <div class="feature-icon">📱</div>
+
+                        <h3>واکنش‌گرا</h3>
+
+                        <p>
+                            سازگار با نمایشگر گوشی، تبلت و کامپیوتر.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <div class="feature-icon">⚡</div>
+
+                        <h3>رابط کاربری سریع</h3>
+
+                        <p>
+                            طراحی ساده و تجربه کاربری روان.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT NOTICE -->
+        <section class="section">
+
+            <div class="container">
+
+                <div class="info-box">
+
+                    <h3>درباره ماهیت پروژه</h3>
+
+                    <p>
+                        SanaDemo یک پروژه مستقل و آزمایشی است
+                        و هیچ وابستگی رسمی به سامانه قوه قضاییه ندارد.
+                        این پروژه خدمات قضایی ارائه نمی‌کند.
+                    </p>
+
+                    <a
+                        href="https://sana.adliran.ir"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        ورود به سامانه رسمی ثنا
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="container">
+
+            <h3>Sana<span>Demo</span></h3>
+
+            <p>
+                یک تجربه آزمایشی از طراحی مدرن وب
+            </p>
+
+            <div class="footer-links">
+
+                <a href="index.html">خانه</a>
+                <a href="features.html">امکانات</a>
+                <a href="about.html">درباره ما</a>
+                <a href="contact.html">ارتباط</a>
+
+            </div>
+
+            <small>
+                © 2026 SanaDemo — Independent Demo Project
+            </small>
+
+        </div>
+
+    </footer>
+
+
 </body>
 </html>
