@@ -4,28 +4,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#101025">
-
-    <meta name="description" content="SanaDemo یک پروژه آزمایشی مستقل برای نمایش طراحی مدرن، داشبورد تعاملی و امکانات نمایشی وب است.">
-
+    <meta name="theme-color" content="#080b1c">
+    <meta name="description" content="SanaDemo یک پروژه مستقل و آزمایشی برای نمایش قابلیت‌های وب، اطلاعات مرورگر و مانیتورینگ نمایشی است.">
     <title>SanaDemo | Ultimate 4.0</title>
 
     <link rel="stylesheet" href="style.css">
 
-    <script src="script.js" defer></script>
+    <style>
+        /* استایل پایه برای ساختار جدید صفحه */
+        .dashboard-section,
+        .monitor-section,
+        .features-section {
+            padding: 75px 20px;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(1.7rem, 4vw, 2.5rem);
+            margin-bottom: 12px;
+        }
+
+        .section-heading p {
+            opacity: .75;
+        }
+
+        .dashboard-grid,
+        .monitor-grid,
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+        }
+
+        .dashboard-card,
+        .monitor-item,
+        .features-grid .card {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform .35s ease, box-shadow .35s ease,
+                        border-color .35s ease;
+            will-change: transform;
+        }
+
+        .dashboard-card:hover,
+        .monitor-item:hover,
+        .features-grid .card:hover {
+            transform: translateY(-12px) scale(1.035);
+            box-shadow: 0 20px 45px rgba(0, 225, 255, .18),
+                        0 0 25px rgba(150, 70, 255, .18);
+            border-color: rgba(0, 225, 255, .7);
+            z-index: 2;
+        }
+
+        .dashboard-card::before,
+        .monitor-item::before,
+        .features-grid .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(
+                135deg,
+                rgba(255,255,255,.12),
+                transparent 45%,
+                rgba(0,225,255,.07)
+            );
+            opacity: .55;
+            pointer-events: none;
+        }
+
+        .dashboard-card > *,
+        .monitor-item > *,
+        .features-grid .card > * {
+            position: relative;
+            transform: translateZ(18px);
+        }
+
+        .info-value {
+            display: block;
+            margin-top: 12px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #36e9a4;
+            box-shadow: 0 0 12px #36e9a4;
+        }
+
+        .info-box {
+            margin: 35px auto;
+            max-width: 950px;
+            padding: 22px;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .footer-content {
+            text-align: center;
+            padding: 28px 15px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .dashboard-card,
+            .monitor-item,
+            .features-grid .card {
+                transition: none !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <!-- BACKGROUND EFFECTS -->
+    <!-- پس‌زمینه متحرک -->
     <div class="background-effects" aria-hidden="true">
         <div class="bg-orb orb-one"></div>
         <div class="bg-orb orb-two"></div>
         <div class="bg-orb orb-three"></div>
     </div>
 
-
-    <!-- NAVIGATION -->
+    <!-- نوار ناوبری -->
     <header class="navbar">
         <div class="container nav-content">
 
@@ -33,14 +146,11 @@
                 Sana<span>Demo</span>
             </a>
 
-            <!-- MOBILE MENU BUTTON -->
-            <button
-                class="menu-toggle"
-                type="button"
-                aria-label="باز کردن منو"
-                aria-expanded="false"
-                aria-controls="main-navigation"
-            >
+            <button class="menu-toggle"
+                    type="button"
+                    aria-label="باز کردن منو"
+                    aria-expanded="false"
+                    aria-controls="main-navigation">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -56,19 +166,17 @@
         </div>
     </header>
 
-
     <main>
 
-        <!-- HERO -->
+        <!-- بخش اصلی -->
         <section class="hero section">
-
             <div class="container hero-grid">
 
                 <div class="hero-content">
-
-                    <span class="hero-badge">
-                        ✦ ULTIMATE EXPERIENCE 4.0
-                    </span>
+                    <div class="hero-badge">
+                        <span class="status-dot"></span>
+                        سیستم آزمایشی فعال
+                    </div>
 
                     <h1>
                         به دنیای
@@ -77,384 +185,258 @@
                     </h1>
 
                     <p>
-                        تجربه‌ای متفاوت از طراحی مدرن وب،
-                        جلوه‌های سه‌بعدی، داشبورد هوشمند
-                        و رابط کاربری تعاملی.
+                        تجربه‌ای مدرن از طراحی سه‌بعدی، افکت‌های تعاملی،
+                        فناوری وب و مانیتورینگ اطلاعات عمومی مرورگر.
                     </p>
 
                     <div class="hero-buttons">
-
                         <a href="features.html" class="btn btn-primary">
                             مشاهده امکانات
                         </a>
 
-                        <a href="about.html" class="btn btn-secondary">
-                            درباره پروژه
+                        <a href="#monitoring" class="btn btn-outline">
+                            مرکز مانیتورینگ
                         </a>
-
                     </div>
 
                     <div class="hero-stats">
-
+                        <div>
+                            <strong>3D</strong>
+                            <span>طراحی سه‌بعدی</span>
+                        </div>
+                        <div>
+                            <strong>Live</strong>
+                            <span>اطلاعات زنده</span>
+                        </div>
                         <div>
                             <strong>4.0</strong>
                             <span>نسخه پروژه</span>
                         </div>
-
-                        <div>
-                            <strong>3D</strong>
-                            <span>جلوه‌های بصری</span>
-                        </div>
-
-                        <div>
-                            <strong>24/7</strong>
-                            <span>دسترسی وب‌سایت</span>
-                        </div>
-
                     </div>
-
                 </div>
 
-
-                <!-- 3D VISUAL -->
+                <!-- المان سه‌بعدی -->
                 <div class="hero-visual float-3d">
-
                     <div class="hero-orb">
-
                         <div class="orb-ring ring-one"></div>
                         <div class="orb-ring ring-two"></div>
                         <div class="orb-ring ring-three"></div>
-
                         <div class="orb-core">
-                            <span>S</span>
+                            <span>SD</span>
                         </div>
-
                     </div>
 
                     <div class="floating-label label-one">
-                        <span>✦</span> SMART UI
+                        <span class="status-dot"></span>
+                        SYSTEM ONLINE
                     </div>
 
                     <div class="floating-label label-two">
-                        <span>◈</span> 3D DESIGN
+                        3D EXPERIENCE
                     </div>
-
                 </div>
 
             </div>
-
         </section>
 
-
-        <!-- DASHBOARD -->
-        <section class="section dashboard-section">
-
+        <!-- داشبورد -->
+        <section class="dashboard-section section" id="dashboard">
             <div class="container">
 
-                <div class="section-title">
-
-                    <span class="section-eyebrow">
-                        LIVE DASHBOARD
-                    </span>
-
-                    <h2>داشبورد هوشمند</h2>
-
-                    <p>
-                        نمای کلی وضعیت و امکانات نمایشی SanaDemo
-                    </p>
-
+                <div class="section-heading">
+                    <h2 class="gradient-text">داشبورد هوشمند</h2>
+                    <p>نمایش اطلاعات عمومی و زنده سیستم</p>
                 </div>
-
 
                 <div class="dashboard-grid">
 
                     <article class="card dashboard-card">
-
-                        <div class="dashboard-icon">🌐</div>
-
-                        <span>وضعیت وب‌سایت</span>
-
-                        <strong id="site-status">
-                            در حال بررسی
-                        </strong>
-
-                        <small>وضعیت بارگذاری صفحه</small>
-
-                    </article>
-
-
-                    <article class="card dashboard-card">
-
-                        <div class="dashboard-icon">📱</div>
-
-                        <span>نوع دستگاه</span>
-
-                        <strong id="dashboard-device">
-                            در حال بررسی
-                        </strong>
-
-                        <small>تشخیص دستگاه فعلی</small>
-
-                    </article>
-
-
-                    <article class="card dashboard-card">
-
-                        <div class="dashboard-icon">🕒</div>
-
-                        <span>ساعت محلی</span>
-
-                        <strong id="live-clock">
-                            --:--:--
-                        </strong>
-
-                        <small>ساعت مرورگر شما</small>
-
-                    </article>
-
-
-                    <article class="card dashboard-card">
-
-                        <div class="dashboard-icon">📅</div>
-
-                        <span>تاریخ محلی</span>
-
-                        <strong id="live-date">
-                            در حال بررسی
-                        </strong>
-
-                        <small>تاریخ دستگاه شما</small>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- MONITORING -->
-        <section class="section monitoring-section">
-
-            <div class="container">
-
-                <div class="section-title">
-
-                    <span class="section-eyebrow">
-                        SYSTEM MONITORING
-                    </span>
-
-                    <h2>مرکز مانیتورینگ</h2>
-
-                    <p>
-                        بررسی وضعیت عملکرد صفحه و اتصال شبکه
-                    </p>
-
-                </div>
-
-
-                <div class="monitor-panel card">
-
-                    <div class="monitor-header">
-
-                        <div>
-                            <h3>وضعیت سیستم</h3>
-                            <p>اطلاعات عمومی و نمایشی مرورگر</p>
-                        </div>
-
-                        <span class="status-indicator">
-                            ● فعال
+                        <div class="feature-icon">🖥️</div>
+                        <h3>وضعیت سیستم</h3>
+                        <span class="info-value" id="site-status">
+                            در حال بررسی...
                         </span>
+                    </article>
 
-                    </div>
+                    <article class="card dashboard-card">
+                        <div class="feature-icon">📱</div>
+                        <h3>دستگاه و مرورگر</h3>
+                        <span class="info-value" id="dashboard-device">
+                            در حال شناسایی...
+                        </span>
+                    </article>
 
+                    <article class="card dashboard-card">
+                        <div class="feature-icon">🕒</div>
+                        <h3>ساعت زنده</h3>
+                        <span class="info-value" id="live-clock">
+                            --:--:--
+                        </span>
+                        <span class="info-value" id="live-date">
+                            در حال دریافت تاریخ...
+                        </span>
+                    </article>
 
-                    <div class="monitor-grid">
+                    <article class="card dashboard-card">
+                        <div class="feature-icon">🌐</div>
+                        <h3>اتصال اینترنت</h3>
+                        <span class="info-value" id="network-status">
+                            در حال بررسی...
+                        </span>
+                    </article>
 
-                        <div class="monitor-item">
-                            <span>اتصال اینترنت</span>
-                            <strong id="network-status">
-                                در حال بررسی
-                            </strong>
-                        </div>
+                </div>
+            </div>
+        </section>
 
-                        <div class="monitor-item">
-                            <span>نوع اتصال</span>
-                            <strong id="connection-type">
-                                نامشخص
-                            </strong>
-                        </div>
+        <!-- مرکز مانیتورینگ -->
+        <section class="monitor-section section" id="monitoring">
+            <div class="container">
 
-                        <div class="monitor-item">
-                            <span>زمان بارگذاری</span>
-                            <strong id="page-load-time">
-                                در حال بررسی
-                            </strong>
-                        </div>
+                <div class="section-heading">
+                    <h2 class="gradient-text">مرکز مانیتورینگ</h2>
+                    <p>بررسی اطلاعات قابل دسترس از طریق مرورگر</p>
+                </div>
 
-                        <div class="monitor-item">
-                            <span>زبان مرورگر</span>
-                            <strong id="browser-language">
-                                در حال بررسی
-                            </strong>
-                        </div>
+                <div class="monitor-grid">
 
-                    </div>
+                    <article class="card monitor-item">
+                        <div class="feature-icon">🌍</div>
+                        <h3>IP عمومی</h3>
+                        <span class="info-value" id="public-ip">
+                            در حال بررسی...
+                        </span>
+                        <small>دریافت از سرویس خارجی IP</small>
+                    </article>
 
+                    <article class="card monitor-item">
+                        <div class="feature-icon">📡</div>
+                        <h3>نوع اتصال</h3>
+                        <span class="info-value" id="connection-type">
+                            نامشخص
+                        </span>
+                    </article>
 
-                    <p class="monitor-note">
-                        مقادیر وابسته به پشتیبانی مرورگر هستند
-                        و ممکن است در بعضی دستگاه‌ها در دسترس نباشند.
+                    <article class="card monitor-item">
+                        <div class="feature-icon">⚡</div>
+                        <h3>زمان بارگذاری</h3>
+                        <span class="info-value" id="page-load-time">
+                            در حال محاسبه...
+                        </span>
+                    </article>
+
+                    <article class="card monitor-item">
+                        <div class="feature-icon">🌐</div>
+                        <h3>زبان مرورگر</h3>
+                        <span class="info-value" id="browser-language">
+                            در حال بررسی...
+                        </span>
+                    </article>
+
+                </div>
+
+                <div class="info-box card">
+                    <h3>درباره اطلاعات نمایش داده‌شده</h3>
+                    <p>
+                        اطلاعات این بخش از قابلیت‌های معمول مرورگر دریافت می‌شوند.
+                        برای نمایش IP عمومی، درخواست به یک سرویس خارجی ارسال می‌شود.
+                        این صفحه IP را در پایگاه داده خود ذخیره نمی‌کند.
+                        مدل دقیق دستگاه نیز ممکن است توسط مرورگر قابل دسترسی نباشد.
                     </p>
-
                 </div>
 
             </div>
-
         </section>
 
-
-        <!-- FEATURES -->
-        <section class="section">
-
+        <!-- امکانات -->
+        <section class="features-section section" id="features">
             <div class="container">
 
-                <div class="section-title">
-
-                    <span class="section-eyebrow">
-                        OUR FEATURES
-                    </span>
-
-                    <h2>ویژگی‌های SanaDemo</h2>
-
-                    <p>
-                        امکاناتی برای تجربه یک رابط کاربری مدرن
-                    </p>
-
+                <div class="section-heading">
+                    <h2 class="gradient-text">امکانات ویژه</h2>
+                    <p>ترکیب طراحی مدرن و فناوری‌های تعاملی</p>
                 </div>
-
 
                 <div class="features-grid">
 
                     <article class="card">
-
-                        <div class="feature-icon">✨</div>
-
-                        <h3>طراحی سه‌بعدی</h3>
-
+                        <div class="feature-icon">💎</div>
+                        <h3>طراحی شیشه‌ای</h3>
                         <p>
-                            جلوه‌های بصری تعاملی و انیمیشن‌های مدرن.
+                            رابط کاربری مدرن با جلوه‌های شیشه‌ای و نور نئونی.
                         </p>
-
                     </article>
 
-
                     <article class="card">
-
-                        <div class="feature-icon">📊</div>
-
-                        <h3>داشبورد هوشمند</h3>
-
+                        <div class="feature-icon">🧊</div>
+                        <h3>تجربه سه‌بعدی</h3>
                         <p>
-                            نمایش وضعیت و اطلاعات عمومی دستگاه.
+                            کارت‌های دارای عمق، حرکت شناور و واکنش به نشانگر موس.
                         </p>
-
                     </article>
 
+                    <article class="card">
+                        <div class="feature-icon">⚙️</div>
+                        <h3>مانیتورینگ</h3>
+                        <p>
+                            نمایش وضعیت شبکه و اطلاعات عمومی محیط مرورگر.
+                        </p>
+                    </article>
 
                     <article class="card">
-
                         <div class="feature-icon">📱</div>
-
-                        <h3>واکنش‌گرا</h3>
-
+                        <h3>طراحی واکنش‌گرا</h3>
                         <p>
-                            سازگار با نمایشگر گوشی، تبلت و کامپیوتر.
+                            سازگاری رابط کاربری با نمایشگر موبایل، تبلت و رایانه.
                         </p>
-
-                    </article>
-
-
-                    <article class="card">
-
-                        <div class="feature-icon">⚡</div>
-
-                        <h3>رابط کاربری سریع</h3>
-
-                        <p>
-                            طراحی ساده و تجربه کاربری روان.
-                        </p>
-
                     </article>
 
                 </div>
 
-            </div>
+                <div class="hero-buttons" style="justify-content:center; margin-top:35px;">
+                    <a href="features.html" class="btn btn-primary">
+                        مشاهده همه امکانات
+                    </a>
+                </div>
 
+            </div>
         </section>
 
-
-        <!-- PROJECT NOTICE -->
-        <section class="section">
-
-            <div class="container">
-
-                <div class="info-box">
-
-                    <h3>درباره ماهیت پروژه</h3>
-
-                    <p>
-                        SanaDemo یک پروژه مستقل و آزمایشی است
-                        و هیچ وابستگی رسمی به سامانه قوه قضاییه ندارد.
-                        این پروژه خدمات قضایی ارائه نمی‌کند.
-                    </p>
-
-                    <a
-                        href="https://sana.adliran.ir"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        ورود به سامانه رسمی ثنا
-                    </a>
-
-                </div>
-
+        <!-- معرفی پروژه -->
+        <section class="container">
+            <div class="info-box card">
+                <h2 class="gradient-text">درباره SanaDemo</h2>
+                <p>
+                    SanaDemo یک پروژه مستقل و آزمایشی برای نمایش قابلیت‌های
+                    طراحی وب و اطلاعات عمومی مرورگر است. این پروژه وابسته به
+                    هیچ سازمان یا سامانه قضایی نیست و خدمات رسمی ارائه نمی‌کند.
+                </p>
+                <a href="about.html" class="btn btn-outline">
+                    اطلاعات بیشتر
+                </a>
             </div>
-
         </section>
 
     </main>
 
-
-    <!-- FOOTER -->
+    <!-- فوتر -->
     <footer class="footer">
-
-        <div class="container">
-
-            <h3>Sana<span>Demo</span></h3>
+        <div class="container footer-content">
+            <a href="index.html" class="brand">
+                Sana<span>Demo</span>
+            </a>
 
             <p>
-                یک تجربه آزمایشی از طراحی مدرن وب
+                SanaDemo Ultimate 4.0
+                <span> | </span>
+                پروژه مستقل و آزمایشی
             </p>
 
-            <div class="footer-links">
-
-                <a href="index.html">خانه</a>
-                <a href="features.html">امکانات</a>
-                <a href="about.html">درباره ما</a>
-                <a href="contact.html">ارتباط</a>
-
-            </div>
-
-            <small>
-                © 2026 SanaDemo — Independent Demo Project
-            </small>
-
+            <p>© 2026 - تمامی حقوق محفوظ است.</p>
         </div>
-
     </footer>
 
+    <script src="script.js" defer></script>
 
 </body>
 </html>
