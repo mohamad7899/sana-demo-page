@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080b1c">
+
+    <meta name="description" content="مشخصات و اطلاعات قابل‌دسترسی دستگاه در SanaDemo">
+
+    <title>SanaDemo | اطلاعات دستگاه</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body data-page="device">
+
+    <!-- Background -->
+    <div class="background-effects">
+        <div class="hero-orb orb-one"></div>
+        <div class="hero-orb orb-two"></div>
+        <div class="hero-orb orb-three"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <div class="nav-content">
+
+            <a href="index.html" class="logo">
+                Sana<span>Demo</span>
+            </a>
+
+            <button class="menu-toggle"
+                    id="menu-toggle"
+                    aria-label="باز کردن منو"
+                    aria-expanded="false">
+                ☰
+            </button>
+
+            <nav class="nav-links" id="main-navigation">
+                <a href="index.html">خانه</a>
+                <a href="features.html">امکانات</a>
+                <a href="about.html">درباره ما</a>
+                <a href="contact.html">ارتباط</a>
+            </nav>
+
+        </div>
+    </header>
+
+
+    <main class="device-page">
+
+        <!-- Page Header -->
+        <section class="device-hero">
+
+            <span class="hero-badge">
+                DEVICE INFORMATION CENTER
+            </span>
+
+            <div class="device-hero-icon">
+                📱
+            </div>
+
+            <h1>
+                اطلاعات کامل
+                <span>دستگاه</span>
+            </h1>
+
+            <p>
+                بررسی مشخصات دستگاهی که با آن وارد SanaDemo شده‌اید
+            </p>
+
+            <a href="index.html#dashboard" class="btn-secondary">
+                ← بازگشت به داشبورد
+            </a>
+
+        </section>
+
+
+        <!-- Device Overview -->
+        <section class="device-overview dashboard-card">
+
+            <div class="card-icon">🖥️</div>
+
+            <h2>نمای کلی دستگاه</h2>
+
+            <p>
+                اطلاعات عمومی قابل‌دسترسی از مرورگر
+            </p>
+
+            <div class="device-grid">
+
+                <div class="device-card">
+                    <span>نوع دستگاه</span>
+                    <strong id="device-type">در حال بررسی...</strong>
+                </div>
+
+                <div class="device-card">
+                    <span>سیستم‌عامل</span>
+                    <strong id="device-os">در حال بررسی...</strong>
+                </div>
+
+                <div class="device-card">
+                    <span>مدل دستگاه</span>
+                    <strong id="device-model">در حال بررسی...</strong>
+                </div>
+
+                <div class="device-card">
+                    <span>مرورگر</span>
+                    <strong id="device-browser">در حال بررسی...</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Display Information -->
+        <section class="device-detail-section">
+
+            <div class="section-title">
+                <span>DISPLAY INFORMATION</span>
+                <h2>مشخصات صفحه‌نمایش</h2>
+            </div>
+
+            <div class="device-detail-grid">
+
+                <article class="dashboard-card">
+                    <div class="card-icon">📐</div>
+                    <h3>رزولوشن صفحه</h3>
+                    <strong id="device-screen">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🪟</div>
+                    <h3>اندازه پنجره مرورگر</h3>
+                    <strong id="device-window">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🔍</div>
+                    <h3>ضریب پیکسل</h3>
+                    <strong id="device-pixel-ratio">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🎨</div>
+                    <h3>عمق رنگ</h3>
+                    <strong id="device-color-depth">در حال بررسی...</strong>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Processor -->
+        <section class="device-detail-section">
+
+            <div class="section-title">
+                <span>PROCESSOR INFORMATION</span>
+                <h2>مشخصات پردازنده</h2>
+            </div>
+
+            <div class="device-detail-grid">
+
+                <article class="dashboard-card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>هسته‌های منطقی پردازنده</h3>
+                    <strong id="device-cores">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🧠</div>
+                    <h3>حافظه دستگاه</h3>
+                    <strong id="device-memory">در حال بررسی...</strong>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Network -->
+        <section class="device-detail-section">
+
+            <div class="section-title">
+                <span>NETWORK INFORMATION</span>
+                <h2>مشخصات شبکه و اتصال</h2>
+            </div>
+
+            <div class="device-detail-grid">
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🌐</div>
+                    <h3>وضعیت اینترنت</h3>
+                    <strong id="device-online">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">📶</div>
+                    <h3>نوع اتصال</h3>
+                    <strong id="device-network">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">⚡</div>
+                    <h3>سرعت تخمینی اتصال</h3>
+                    <strong id="device-speed">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🌍</div>
+                    <h3>IP عمومی</h3>
+                    <strong id="device-public-ip">در حال دریافت...</strong>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Browser Information -->
+        <section class="device-detail-section">
+
+            <div class="section-title">
+                <span>BROWSER INFORMATION</span>
+                <h2>مشخصات مرورگر</h2>
+            </div>
+
+            <div class="device-detail-grid">
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🗣️</div>
+                    <h3>زبان مرورگر</h3>
+                    <strong id="device-language">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🕒</div>
+                    <h3>منطقه زمانی</h3>
+                    <strong id="device-timezone">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🍪</div>
+                    <h3>وضعیت کوکی‌ها</h3>
+                    <strong id="device-cookies">در حال بررسی...</strong>
+                </article>
+
+                <article class="dashboard-card">
+                    <div class="card-icon">🔋</div>
+                    <h3>اطلاعات باتری</h3>
+                    <strong id="device-battery">در دسترس نیست</strong>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- Privacy -->
+        <section class="info-box">
+
+            <div class="info-box-icon">🔐</div>
+
+            <div>
+                <h3>حریم خصوصی و محدودیت‌های مرورگر</h3>
+
+                <p>
+                    این صفحه فقط اطلاعاتی را نمایش می‌دهد که مرورگر
+                    اجازه دسترسی به آن‌ها را می‌دهد. مدل دقیق دستگاه،
+                    اطلاعات سخت‌افزاری و وضعیت باتری ممکن است در برخی
+                    مرورگرها قابل‌دسترسی نباشند. IP عمومی برای دریافت
+                    به سرویس خارجی ارسال درخواست می‌شود. اطلاعات
+                    مکانی فقط با اجازه صریح کاربر قابل دریافت است.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- Footer Button -->
+        <div class="device-back">
+            <a href="index.html#dashboard" class="btn-primary">
+                بازگشت به داشبورد
+            </a>
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-content">
+
+            <a href="index.html" class="logo">
+                Sana<span>Demo</span>
+            </a>
+
+            <p>Independent Smart Web Demo</p>
+
+            <p class="copyright">
+                © 2026 SanaDemo
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>
