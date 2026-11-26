@@ -1,155 +1,405 @@
+/* =========================================
+   SanaDemo Ultimate 4.0
+   Dashboard + 3D + Device Information
+========================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+    const $ = (selector, parent = document) =>
+        parent.querySelector(selector);
 
-    // =========================================
-    // 1. GLOBAL NEON POINTER
-    // =========================================
+    const $$ = (selector, parent = document) =>
+        [...parent.querySelectorAll(selector)];
 
-    document.addEventListener("pointermove", (event) => {
-        document.documentElement.style.setProperty("--pointer-x", `${event.clientX}px`);
-        document.documentElement.style.setProperty("--pointer-y", `${event.clientY}px`);
-    });
+    /* 1. Site status */
+    const siteStatus = $("#site-status");
 
+    if (siteStatus) {
+        siteStatus.textContent = "فعال";
+    }
 
-    // =========================================
-    // 2. 3D CARD TILT
-    // =========================================
+    /* 2. Live clock and date */
+    const clock = $("#live-clock");
+    const date = $("#live-date");
 
-    document.querySelectorAll(".card").forEach((card) => {
+    function updateDateTime() {
+        const now = new Date();
 
-        card.addEventListener("pointermove", (event) => {
-            if (event.pointerType === "touch") return;
+        if (clock) {
+            clock.textContent = now.toLocaleTimeString("fa-IR");
+        }
+
+        if (date) {
+            date.textContent = now.toLocaleDateString("fa-IR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            });
+        }
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    /* 3. Network status */
+    const networkStatus = $("#network-status");
+    const connectionType = $("#connection-type");
+
+    function updateNetwork() {
+        if (networkStatus) {
+            networkStatus.textContent =
+                navigator.onLine ? "متصل" : "آفلاین";
+        }
+
+        if (connectionType) {
+            const connection =
+                navigator.connection ||
+                navigator.mozConnection ||
+                navigator.webkitConnection;
+
+            connectionType.textContent =
+                connection?.effectiveType || "نامشخص";
+        }
+    }
+
+    updateNetwork();
+
+    window.addEventListener("online", updateNetwork);
+    window.addEventListener("offline", updateNetwork);
+
+    if (navigator.connection) {
+        navigator.connection.addEventListener(
+            "change",
+            updateNetwork
+        );
+    }
+
+    /* 4. Browser information */
+    const browserLanguage = $("#browser-language");
+
+    if (browserLanguage) {
+        browserLanguage.textContent =
+            navigator.language || "نامشخص";
+    }
+
+    /* 5. Page loading time */
+    const pageLoadTime = $("#page-load-time");
+
+    if (pageLoadTime) {
+        window.addEventListener("load", () => {
+            const timing = performance.getEntriesByType("navigation")[0];
+
+            const duration = timing
+                ? Math.round(timing.loadEventEnd - timing.startTime)
+                : Math.round(performance.now());
+
+            pageLoadTime.textContent =
+                `${Math.max(0, duration)} میلی‌ثانیه`;
+        });
+    }
+
+    /* 6. Device detection */
+    function detectDevice() {
+        const ua = navigator.userAgent;
+
+        if (/iPad|Tablet/i.test(ua)) {
+            return "تبلت";
+        }
+
+        if (/Android|iPhone|iPod|Mobile/i.test(ua)) {
+            return "موبایل";
+        }
+
+        return "کامپیوتر";
+    }
+
+    function detectOS() {
+        const ua = navigator.userAgent;
+
+        if (/Windows/i.test(ua)) return "Windows";
+        if (/Android/i.test(ua)) return "Android";
+        if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+        if (/Mac OS/i.test(ua)) return "macOS";
+        if (/Linux/i.test(ua)) return "Linux";
+
+        return "نامشخص";
+    }
+
+    function detectBrowser() {
+        const ua = navigator.userAgent;
+
+        if (/Edg/i.test(ua)) return "Microsoft Edge";
+        if (/OPR|Opera/i.test(ua)) return "Opera";
+        if (/Chrome/i.test(ua) && !/Edg/i.test(ua)) return "Chrome";
+        if (/Firefox/i.test(ua)) return "Firefox";
+        if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) return "Safari";
+
+        return "نامشخص";
+    }
+
+    const deviceType = detectDevice();
+
+    const dashboardDevice = $("#dashboard-device");
+
+    if (dashboardDevice) {
+        dashboardDevice.textContent = deviceType;
+    }
+
+    /* 7. Optional device model information */
+    async function getDeviceModel() {
+        if (!navigator.userAgentData?.getHighEntropyValues) {
+            return "در دسترس نیست";
+        }
+
+        try {
+            const info =
+                await navigator.userAgentData.getHighEntropyValues([
+                    "model"
+                ]);
+
+            return info.model || "اعلام نشده";
+        } catch {
+            return "در دسترس نیست";
+        }
+    }
+
+    /* 8. Device information panel */
+    function createDevicePanel() {
+        if ($(".device-section")) return;
+
+        const panel = document.createElement("section");
+
+        panel.className = "device-section reveal";
+
+        panel.innerHTML = `
+            <div class="container">
+                <div class="section-heading">
+                    <span class="section-tag">DEVICE MONITOR</span>
+                    <h2>اطلاعات دستگاه شما</h2>
+                    <p>اطلاعاتی که مرورگر اجازه نمایش آن‌ها را می‌دهد</p>
+                </div>
+
+                <div class="device-grid">
+
+                    <div class="device-card">
+                        <span>نوع دستگاه</span>
+                        <strong id="device-type">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>سیستم‌عامل</span>
+                        <strong id="device-os">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>مرورگر</span>
+                        <strong id="device-browser">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>مدل دستگاه</span>
+                        <strong id="device-model">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>اندازه صفحه</span>
+                        <strong id="device-screen">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>تعداد پردازنده‌های منطقی</span>
+                        <strong id="device-cores">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>IP عمومی</span>
+                        <strong id="device-public-ip">در حال بررسی...</strong>
+                    </div>
+
+                    <div class="device-card">
+                        <span>IP محلی</span>
+                        <strong>مستقیماً در دسترس نیست</strong>
+                    </div>
+
+                </div>
+
+                <p class="device-note">
+                    نکته حریم خصوصی: برای نمایش IP عمومی، درخواست به سرویس
+                    خارجی ipify ارسال می‌شود. این سرویس ممکن است IP درخواست
+                    را دریافت و ثبت کند. این سایت IP را در پایگاه داده خود
+                    ذخیره نمی‌کند. مدل دستگاه نیز فقط در صورت پشتیبانی مرورگر
+                    نمایش داده می‌شود.
+                </p>
+            </div>
+        `;
+
+        const footer = $("footer");
+
+        if (footer) {
+            footer.before(panel);
+        } else {
+            document.body.appendChild(panel);
+        }
+
+        $("#device-type").textContent = deviceType;
+        $("#device-os").textContent = detectOS();
+        $("#device-browser").textContent = detectBrowser();
+
+        $("#device-screen").textContent =
+            `${screen.width} × ${screen.height}`;
+
+        $("#device-cores").textContent =
+            navigator.hardwareConcurrency || "نامشخص";
+
+        getDeviceModel().then(model => {
+            const element = $("#device-model");
+            if (element) element.textContent = model;
+        });
+
+        /* Public IP through an external service */
+        const ipElement = $("#device-public-ip");
+
+        fetch("https://api.ipify.org?format=json", {
+            cache: "no-store"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("IP request failed");
+                }
+
+                return response.json();
+            })
+            .then(data => {
+                if (ipElement) {
+                    ipElement.textContent = data.ip || "نامشخص";
+                }
+            })
+            .catch(() => {
+                if (ipElement) {
+                    ipElement.textContent = "قابل دریافت نیست";
+                }
+            });
+    }
+
+    createDevicePanel();
+
+    /* 9. 3D card tilt */
+    const cards = $$(".feature-card, .dashboard-card, .monitor-card");
+
+    cards.forEach(card => {
+        card.addEventListener("mousemove", event => {
+            if (window.matchMedia("(max-width: 760px)").matches) {
+                return;
+            }
 
             const rect = card.getBoundingClientRect();
+
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
 
-            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 10;
-            const rotateX = ((rect.height / 2 - y) / (rect.height / 2)) * 10;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
 
-            card.style.setProperty("--rotate-x", `${rotateX}deg`);
-            card.style.setProperty("--rotate-y", `${rotateY}deg`);
-            card.style.setProperty("--mouse-x", `${x}px`);
-            card.style.setProperty("--mouse-y", `${y}px`);
+            const rotateX = ((y - centerY) / centerY) * -7;
+            const rotateY = ((x - centerX) / centerX) * 7;
 
-            card.classList.add("card-active");
+            card.style.transform =
+                `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
         });
 
-        card.addEventListener("pointerleave", () => {
-            card.style.setProperty("--rotate-x", "0deg");
-            card.style.setProperty("--rotate-y", "0deg");
-            card.classList.remove("card-active");
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = "";
         });
-
     });
 
+    /* 10. Mouse neon effect */
+    const pointer = document.createElement("div");
 
-    // =========================================
-    // 3. HERO 3D PARALLAX
-    // =========================================
+    pointer.className = "neon-pointer";
 
-    const heroVisual = document.querySelector(".hero-visual");
+    Object.assign(pointer.style, {
+        position: "fixed",
+        width: "260px",
+        height: "260px",
+        borderRadius: "50%",
+        pointerEvents: "none",
+        zIndex: "0",
+        background: "radial-gradient(circle, rgba(0,220,255,.09), transparent 70%)",
+        transform: "translate(-50%, -50%)",
+        left: "-500px",
+        top: "-500px"
+    });
+
+    document.body.appendChild(pointer);
+
+    window.addEventListener("mousemove", event => {
+        pointer.style.left = `${event.clientX}px`;
+        pointer.style.top = `${event.clientY}px`;
+    });
+
+    /* 11. Hero parallax */
+    const heroVisual = $(".hero-visual");
 
     if (heroVisual) {
-        heroVisual.addEventListener("pointermove", (event) => {
-            if (event.pointerType === "touch") return;
+        window.addEventListener("mousemove", event => {
+            if (window.matchMedia("(max-width: 760px)").matches) {
+                return;
+            }
 
-            const rect = heroVisual.getBoundingClientRect();
-            const x = (event.clientX - rect.left) / rect.width;
-            const y = (event.clientY - rect.top) / rect.height;
+            const x = (event.clientX / window.innerWidth - 0.5) * 12;
+            const y = (event.clientY / window.innerHeight - 0.5) * 12;
 
-            heroVisual.style.setProperty("--hero-rotate-x", `${(0.5 - y) * 20}deg`);
-            heroVisual.style.setProperty("--hero-rotate-y", `${(x - 0.5) * 20}deg`);
-        });
-
-        heroVisual.addEventListener("pointerleave", () => {
-            heroVisual.style.setProperty("--hero-rotate-x", "0deg");
-            heroVisual.style.setProperty("--hero-rotate-y", "0deg");
+            heroVisual.style.setProperty("--mouse-x", `${x}px`);
+            heroVisual.style.setProperty("--mouse-y", `${y}px`);
         });
     }
 
-
-    // =========================================
-    // 4. FLOATING ELEMENTS
-    // =========================================
-
-    document.querySelectorAll(".float-3d, .hero-orb").forEach((element, index) => {
-        element.style.setProperty("--float-delay", `${index * 0.4}s`);
-    });
-
-
-    // =========================================
-    // 5. SCROLL REVEAL
-    // =========================================
-
-    const revealElements = document.querySelectorAll(
-        ".card, .section-title, .info-box, .page-header, .hero-content"
-    );
+    /* 12. Scroll reveal */
+    const revealElements = $$(".reveal");
 
     if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach((entry) => {
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add("revealed");
-                    obs.unobserve(entry.target);
+                    entry.target.classList.add("active");
+                    observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.12 });
+        }, {
+            threshold: 0.12
+        });
 
-        revealElements.forEach((element, index) => {
-            element.classList.add("reveal");
-            element.style.setProperty("--reveal-delay", `${(index % 4) * 0.12}s`);
+        revealElements.forEach(element => {
             observer.observe(element);
         });
     } else {
-        revealElements.forEach(element => element.classList.add("revealed"));
+        revealElements.forEach(element => {
+            element.classList.add("active");
+        });
     }
 
+    /* 13. Mobile navigation */
+    const nav = $(".navbar .nav-links, .navbar nav");
+    const navContent = $(".navbar .nav-content");
 
-    // =========================================
-    // 6. BACK TO TOP
-    // =========================================
-
-    const backToTop = document.createElement("button");
-    backToTop.className = "back-to-top";
-    backToTop.type = "button";
-    backToTop.textContent = "↑";
-    backToTop.setAttribute("aria-label", "بازگشت به بالای صفحه");
-    document.body.appendChild(backToTop);
-
-    window.addEventListener("scroll", () => {
-        backToTop.classList.toggle("show", window.scrollY > 400);
-    });
-
-    backToTop.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-
-    // =========================================
-    // 7. MOBILE NAVIGATION
-    // =========================================
-
-    const nav = document.querySelector(".navbar .nav-links, .navbar nav");
-    const navContainer = document.querySelector(".navbar .nav-content");
-
-    if (nav && navContainer) {
+    if (nav && navContent && !$(".mobile-menu-btn")) {
         const menuButton = document.createElement("button");
-        menuButton.className = "mobile-menu-button";
+
+        menuButton.className = "mobile-menu-btn";
         menuButton.type = "button";
-        menuButton.textContent = "☰";
         menuButton.setAttribute("aria-label", "باز کردن منو");
         menuButton.setAttribute("aria-expanded", "false");
+        menuButton.textContent = "☰";
 
-        navContainer.appendChild(menuButton);
+        navContent.appendChild(menuButton);
 
         menuButton.addEventListener("click", () => {
             const isOpen = nav.classList.toggle("mobile-open");
+
             menuButton.textContent = isOpen ? "✕" : "☰";
             menuButton.setAttribute("aria-expanded", String(isOpen));
         });
 
-        nav.querySelectorAll("a").forEach(link => {
+        $$(".nav-links a, nav a").forEach(link => {
             link.addEventListener("click", () => {
                 nav.classList.remove("mobile-open");
                 menuButton.textContent = "☰";
@@ -158,233 +408,38 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    /* 14. Active navigation link */
+    const currentPage =
+        location.pathname.split("/").pop() || "index.html";
 
-    // =========================================
-    // 8. ACTIVE PAGE LINK
-    // =========================================
+    $$(".nav-links a, nav a").forEach(link => {
+        const href = link.getAttribute("href");
 
-    const currentPage = location.pathname.split("/").pop() || "index.html";
-
-    document.querySelectorAll(".nav-links a, .navbar nav a").forEach(link => {
-        if (link.getAttribute("href") === currentPage) {
+        if (href === currentPage) {
             link.classList.add("active");
-            link.setAttribute("aria-current", "page");
         }
     });
 
+    /* 15. Back to top */
+    const topButton = document.createElement("button");
 
-    // =========================================
-    // 9. DEVICE INFORMATION PANEL
-    // =========================================
+    topButton.className = "back-to-top";
+    topButton.type = "button";
+    topButton.textContent = "↑";
+    topButton.setAttribute("aria-label", "بازگشت به بالای صفحه");
 
-    const deviceSection = document.createElement("section");
-    deviceSection.className = "device-section";
+    document.body.appendChild(topButton);
 
-    deviceSection.innerHTML = `
-        <div class="container">
-            <div class="device-panel">
-                <h2>📱 اطلاعات دستگاه و شبکه</h2>
-                <p>اطلاعات قابل‌دسترسی دستگاه فعلی</p>
-
-                <div class="device-grid">
-
-                    <div class="device-item">
-                        <span>IP عمومی</span>
-                        <strong id="device-public-ip">در حال بررسی...</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>IP محلی</span>
-                        <strong id="device-local-ip">در دسترس نیست</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>نوع دستگاه</span>
-                        <strong id="device-type">در حال بررسی...</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>مدل دستگاه</span>
-                        <strong id="device-model">نامشخص</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>سیستم‌عامل</span>
-                        <strong id="device-os">در حال بررسی...</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>مرورگر</span>
-                        <strong id="device-browser">در حال بررسی...</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>اندازه صفحه</span>
-                        <strong id="device-screen">در حال بررسی...</strong>
-                    </div>
-
-                    <div class="device-item">
-                        <span>هسته‌های پردازنده</span>
-                        <strong id="device-cores">نامشخص</strong>
-                    </div>
-
-                </div>
-
-                <small>
-                    اطلاعات دستگاه در این صفحه ذخیره نمی‌شود.
-                    برای دریافت IP عمومی، درخواست به سرویس خارجی ارسال می‌شود.
-                </small>
-            </div>
-        </div>
-    `;
-
-    const footer = document.querySelector("footer");
-
-    if (footer) {
-        document.body.insertBefore(deviceSection, footer);
-    } else {
-        document.body.appendChild(deviceSection);
-    }
-
-
-    // =========================================
-    // 10. DEVICE DETECTION
-    // =========================================
-
-    const ua = navigator.userAgent;
-
-    let deviceType = "کامپیوتر";
-
-    if (/iPad|Tablet/i.test(ua)) {
-        deviceType = "تبلت";
-    } else if (/Mobile|Android|iPhone|iPod/i.test(ua)) {
-        deviceType = "موبایل";
-    }
-
-    let operatingSystem = "نامشخص";
-
-    if (/Android/i.test(ua)) {
-        operatingSystem = "Android";
-    } else if (/iPhone|iPad|iPod/i.test(ua)) {
-        operatingSystem = "iOS / iPadOS";
-    } else if (/Windows/i.test(ua)) {
-        operatingSystem = "Windows";
-    } else if (/Mac OS|Macintosh/i.test(ua)) {
-        operatingSystem = "macOS";
-    } else if (/Linux/i.test(ua)) {
-        operatingSystem = "Linux";
-    }
-
-    let browser = "نامشخص";
-
-    if (/Edg/i.test(ua)) {
-        browser = "Microsoft Edge";
-    } else if (/OPR|Opera/i.test(ua)) {
-        browser = "Opera";
-    } else if (/SamsungBrowser/i.test(ua)) {
-        browser = "Samsung Internet";
-    } else if (/Firefox/i.test(ua)) {
-        browser = "Mozilla Firefox";
-    } else if (/CriOS|Chrome/i.test(ua)) {
-        browser = "Google Chrome";
-    } else if (/Safari/i.test(ua)) {
-        browser = "Safari";
-    }
-
-    let model = "قابل تشخیص نیست";
-
-    const androidMatch = ua.match(/Android[^;]*;\s*([^;)]+)/i);
-
-    if (androidMatch && androidMatch[1]) {
-        model = androidMatch[1].replace(/Build\/.*/i, "").trim();
-    } else if (/iPhone/i.test(ua)) {
-        model = "Apple iPhone";
-    } else if (/iPad/i.test(ua)) {
-        model = "Apple iPad";
-    }
-
-    document.getElementById("device-type").textContent = deviceType;
-    document.getElementById("device-os").textContent = operatingSystem;
-    document.getElementById("device-browser").textContent = browser;
-    document.getElementById("device-model").textContent = model;
-
-    document.getElementById("device-screen").textContent =
-        `${screen.width} × ${screen.height} پیکسل`;
-
-    document.getElementById("device-cores").textContent =
-        navigator.hardwareConcurrency
-            ? `${navigator.hardwareConcurrency} هسته`
-            : "نامشخص";
-
-
-    // =========================================
-    // 11. OPTIONAL DEVICE MODEL API
-    // =========================================
-
-    if (
-        navigator.userAgentData &&
-        typeof navigator.userAgentData.getHighEntropyValues === "function"
-    ) {
-        navigator.userAgentData.getHighEntropyValues([
-            "model",
-            "platform",
-            "platformVersion"
-        ]).then(data => {
-
-            if (data.model) {
-                document.getElementById("device-model").textContent = data.model;
-            }
-
-            if (data.platform) {
-                document.getElementById("device-os").textContent =
-                    data.platform +
-                    (data.platformVersion ? " " + data.platformVersion : "");
-            }
-
-        }).catch(() => {});
-    }
-
-
-    // =========================================
-    // 12. PUBLIC IP
-    // =========================================
-
-    const publicIPElement = document.getElementById("device-public-ip");
-
-    fetch("https://api.ipify.org?format=json", {
-        method: "GET",
-        cache: "no-store"
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("IP service unavailable");
-        return response.json();
-    })
-    .then(data => {
-        publicIPElement.textContent = data.ip || "دریافت نشد";
-    })
-    .catch(() => {
-        publicIPElement.textContent = "دریافت نشد";
+    window.addEventListener("scroll", () => {
+        topButton.classList.toggle("show", window.scrollY > 400);
     });
 
+    topButton.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 
-    // =========================================
-    // 13. LOCAL IP
-    // =========================================
-
-    // مرورگرهای جدید معمولاً IP محلی را در اختیار سایت نمی‌گذارند.
-    // برای حفظ حریم خصوصی، از روش‌های دور زدن محدودیت مرورگر استفاده نمی‌کنیم.
-
-    document.getElementById("device-local-ip").textContent =
-        "مرورگر دسترسی مستقیم نمی‌دهد";
-
-
-    // =========================================
-    // 14. READY
-    // =========================================
-
-    document.body.classList.add("sana-ready");
-
-    console.log("SanaDemo Ultimate 3D is ready!");
-    console.log("Device information panel is active!");
-
+    console.log("SanaDemo Ultimate 4.0 is ready!");
 });
