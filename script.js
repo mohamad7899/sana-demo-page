@@ -1,100 +1,114 @@
 
 /* =========================================
-   SanaDemo Ultimate 4.0
-   Interactive Dashboard & 3D Effects
+   SAN DEMO ULTIMATE 4.0
+   INTERACTIVE JAVASCRIPT
 ========================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-    "use strict";
 
-    const $ = (selector) => document.querySelector(selector);
+    /* =====================================
+       1. LIVE CLOCK AND DATE
+    ===================================== */
 
-    // ---------- Live Clock & Date ----------
-    const clock = $("#live-clock");
-    const date = $("#live-date");
+    const clock = document.getElementById("live-clock");
+    const date = document.getElementById("live-date");
 
-    function updateDateTime() {
+    function updateClock() {
         const now = new Date();
 
         if (clock) {
-            clock.textContent = new Intl.DateTimeFormat("fa-IR", {
+            clock.textContent = now.toLocaleTimeString("fa-IR", {
                 hour: "2-digit",
                 minute: "2-digit",
-                second: "2-digit",
-                hour12: false
-            }).format(now);
+                second: "2-digit"
+            });
         }
 
         if (date) {
-            date.textContent = new Intl.DateTimeFormat("fa-IR", {
-                weekday: "long",
+            date.textContent = now.toLocaleDateString("fa-IR", {
                 year: "numeric",
                 month: "long",
-                day: "numeric"
-            }).format(now);
+                day: "numeric",
+                weekday: "long"
+            });
         }
     }
 
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
+    updateClock();
+    setInterval(updateClock, 1000);
 
 
-    // ---------- Browser & Device ----------
-    const deviceElement = $("#dashboard-device");
+    /* =====================================
+       2. DEVICE AND BROWSER INFORMATION
+    ===================================== */
 
-    function getDeviceInfo() {
-        const ua = navigator.userAgent || "";
-        let device = "دستگاه ناشناخته";
+    const deviceElement = document.getElementById("dashboard-device");
+
+    function detectDevice() {
+        const ua = navigator.userAgent;
+
+        let device = "دستگاه نامشخص";
+        let browser = "مرورگر نامشخص";
         let os = "سیستم‌عامل نامشخص";
 
         if (/iPhone/i.test(ua)) {
             device = "Apple iPhone";
-            os = "iOS";
         } else if (/iPad/i.test(ua)) {
             device = "Apple iPad";
-            os = "iPadOS";
         } else if (/Android/i.test(ua)) {
-            device = "دستگاه Android";
-            os = "Android";
+            device = /Mobile/i.test(ua) ? "Android Mobile" : "Android Tablet";
         } else if (/Windows/i.test(ua)) {
-            device = "کامپیوتر";
-            os = "Windows";
+            device = "Windows PC";
         } else if (/Macintosh|Mac OS/i.test(ua)) {
-            device = "دستگاه Mac";
+            device = "Mac Computer";
+        } else if (/Linux/i.test(ua)) {
+            device = "Linux Computer";
+        }
+
+        if (/Edg\//i.test(ua)) {
+            browser = "Microsoft Edge";
+        } else if (/Firefox\//i.test(ua)) {
+            browser = "Mozilla Firefox";
+        } else if (/Chrome\//i.test(ua)) {
+            browser = "Google Chrome";
+        } else if (/Safari\//i.test(ua)) {
+            browser = "Apple Safari";
+        }
+
+        if (/Windows NT/i.test(ua)) {
+            os = "Windows";
+        } else if (/Android/i.test(ua)) {
+            os = "Android";
+        } else if (/iPhone|iPad|iPod/i.test(ua)) {
+            os = "iOS / iPadOS";
+        } else if (/Mac OS/i.test(ua)) {
             os = "macOS";
         } else if (/Linux/i.test(ua)) {
-            device = "کامپیوتر";
             os = "Linux";
         }
 
-        let browser = "مرورگر ناشناخته";
-
-        if (/Edg/i.test(ua)) browser = "Microsoft Edge";
-        else if (/Chrome/i.test(ua) && !/Chromium/i.test(ua)) browser = "Google Chrome";
-        else if (/Firefox/i.test(ua)) browser = "Mozilla Firefox";
-        else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = "Safari";
-
-        return { device, os, browser };
+        return `${device} | ${os} | ${browser}`;
     }
-
-    const deviceInfo = getDeviceInfo();
 
     if (deviceElement) {
-        deviceElement.textContent =
-            `${deviceInfo.device} | ${deviceInfo.os}`;
-        deviceElement.title = `مرورگر: ${deviceInfo.browser}`;
+        deviceElement.textContent = detectDevice();
     }
 
 
-    // ---------- Network Status ----------
-    const networkStatus = $("#network-status");
-    const connectionType = $("#connection-type");
+    /* =====================================
+       3. NETWORK STATUS
+    ===================================== */
+
+    const networkStatus = document.getElementById("network-status");
+    const connectionType = document.getElementById("connection-type");
 
     function updateNetwork() {
+        const connected = navigator.onLine;
+
         if (networkStatus) {
-            networkStatus.textContent = navigator.onLine
-                ? "متصل"
-                : "قطع";
+            networkStatus.textContent = connected
+                ? "متصل به اینترنت"
+                : "بدون اتصال شبکه";
         }
 
         if (connectionType) {
@@ -106,22 +120,25 @@ document.addEventListener("DOMContentLoaded", () => {
             connectionType.textContent =
                 connection && connection.effectiveType
                     ? connection.effectiveType.toUpperCase()
-                    : "نامشخص";
+                    : "در دسترس نیست";
         }
     }
-
-    updateNetwork();
 
     window.addEventListener("online", updateNetwork);
     window.addEventListener("offline", updateNetwork);
 
     if (navigator.connection) {
-        navigator.connection.addEventListener?.("change", updateNetwork);
+        navigator.connection.addEventListener("change", updateNetwork);
     }
 
+    updateNetwork();
 
-    // ---------- Browser Language ----------
-    const languageElement = $("#browser-language");
+
+    /* =====================================
+       4. BROWSER LANGUAGE
+    ===================================== */
+
+    const languageElement = document.getElementById("browser-language");
 
     if (languageElement) {
         languageElement.textContent =
@@ -129,106 +146,237 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ---------- Page Load Time ----------
-    const loadElement = $("#page-load-time");
+    /* =====================================
+       5. PAGE LOAD TIME
+    ===================================== */
 
-    function updateLoadTime() {
-        if (!loadElement) return;
+    const loadTimeElement = document.getElementById("page-load-time");
 
-        const timing = performance.getEntriesByType("navigation")[0];
+    function showLoadTime() {
+        if (!loadTimeElement) return;
 
-        if (timing && timing.loadEventEnd > 0) {
-            loadElement.textContent =
-                `${Math.round(timing.loadEventEnd - timing.startTime)} ms`;
+        const navigation = performance.getEntriesByType("navigation")[0];
+
+        if (navigation && navigation.loadEventEnd > 0) {
+            loadTimeElement.textContent =
+                Math.round(navigation.loadEventEnd) + " ms";
         } else {
-            loadElement.textContent = "در دسترس نیست";
+            loadTimeElement.textContent = "ثبت نشده";
         }
     }
 
     window.addEventListener("load", () => {
-        setTimeout(updateLoadTime, 100);
+        setTimeout(showLoadTime, 100);
     });
 
-    setTimeout(updateLoadTime, 1500);
+    showLoadTime();
 
 
-    // ---------- Public IP (External Service) ----------
-    const ipElement = $("#public-ip");
+    /* =====================================
+       6. PUBLIC IP
+    ===================================== */
 
-    if (ipElement) {
-        ipElement.textContent = "در حال بررسی...";
+    const ipElement = document.getElementById("public-ip");
 
-        fetch("https://api.ipify.org?format=json", {
-            method: "GET",
-            cache: "no-store"
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("IP lookup failed");
-                }
-                return response.json();
-            })
-            .then(data => {
-                ipElement.textContent = data.ip || "نامشخص";
-            })
-            .catch(() => {
-                ipElement.textContent = "قابل دریافت نیست";
-            });
+    async function getPublicIP() {
+        if (!ipElement) return;
+
+        if (!navigator.onLine) {
+            ipElement.textContent = "اتصال اینترنت برقرار نیست";
+            return;
+        }
+
+        ipElement.textContent = "در حال دریافت...";
+
+        try {
+            const response = await fetch(
+                "https://api.ipify.org?format=json",
+                { cache: "no-store" }
+            );
+
+            if (!response.ok) {
+                throw new Error("IP service unavailable");
+            }
+
+            const data = await response.json();
+
+            if (
+                typeof data.ip !== "string" ||
+                !/^[0-9a-fA-F:.]+$/.test(data.ip)
+            ) {
+                throw new Error("Invalid IP response");
+            }
+
+            ipElement.textContent = data.ip;
+
+        } catch (error) {
+            ipElement.textContent = "دریافت IP ناموفق بود";
+            console.warn("Public IP could not be loaded.");
+        }
+    }
+
+    getPublicIP();
+
+
+    /* =====================================
+       7. SYSTEM STATUS
+    ===================================== */
+
+    const siteStatus = document.getElementById("site-status");
+
+    if (siteStatus) {
+        siteStatus.textContent = "فعال و آماده";
     }
 
 
-    // ---------- Mobile Navigation ----------
-    const menuButton = $(".menu-toggle");
-    const navLinks = $(".nav-links");
+    /* =====================================
+       8. MOBILE NAVIGATION
+    ===================================== */
 
-    if (menuButton && navLinks) {
-        menuButton.setAttribute("aria-expanded", "false");
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
 
-        menuButton.addEventListener("click", () => {
+    if (menuToggle && navLinks) {
+
+        menuToggle.addEventListener("click", () => {
             const isOpen = navLinks.classList.toggle("active");
 
-            menuButton.setAttribute(
-                "aria-expanded",
-                String(isOpen)
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.setAttribute(
+                "aria-label",
+                isOpen ? "بستن منو" : "باز کردن منو"
             );
         });
 
         navLinks.querySelectorAll("a").forEach(link => {
             link.addEventListener("click", () => {
                 navLinks.classList.remove("active");
-                menuButton.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-expanded", "false");
             });
+        });
+
+        document.addEventListener("click", event => {
+            if (
+                !navLinks.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                navLinks.classList.remove("active");
+                menuToggle.setAttribute("aria-expanded", "false");
+            }
         });
     }
 
 
-    // ---------- Active Navigation Link ----------
-    const currentPage =
-        window.location.pathname.split("/").pop() || "index.html";
+    /* =====================================
+       9. INTERACTIVE 3D CARD TILT
+    ===================================== */
 
-    document.querySelectorAll(".nav-links a").forEach(link => {
-        const href = link.getAttribute("href");
-
-        if (href && href.split("/").pop() === currentPage) {
-            link.classList.add("active");
-        }
-    });
-
-
-    // ---------- Scroll Reveal ----------
-    const revealElements = document.querySelectorAll(
-        ".section-title, .dashboard-card, .monitor-item, " +
-        ".features-grid > .card, .info-box, .hero-content"
+    const cards = document.querySelectorAll(
+        ".dashboard-card, .monitor-item, .features-grid .card"
     );
 
-    if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver((entries) => {
+    const supportsHover = window.matchMedia(
+        "(hover: hover) and (pointer: fine)"
+    ).matches;
+
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (supportsHover && !reduceMotion) {
+
+        cards.forEach(card => {
+
+            card.addEventListener("pointermove", event => {
+
+                const rect = card.getBoundingClientRect();
+
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateY = ((x - centerX) / centerX) * 7;
+                const rotateX = ((centerY - y) / centerY) * 7;
+
+                card.style.transform = `
+                    perspective(900px)
+                    translateY(-13px)
+                    scale3d(1.035, 1.035, 1.035)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                `;
+
+                card.style.setProperty(
+                    "--mouse-x",
+                    `${x}px`
+                );
+
+                card.style.setProperty(
+                    "--mouse-y",
+                    `${y}px`
+                );
+            });
+
+            card.addEventListener("pointerleave", () => {
+                card.style.transform = "";
+            });
+
+        });
+    }
+
+
+    /* =====================================
+       10. HERO PARALLAX
+    ===================================== */
+
+    const heroVisual = document.querySelector(".hero-visual");
+
+    if (heroVisual && supportsHover && !reduceMotion) {
+
+        heroVisual.addEventListener("pointermove", event => {
+
+            const rect = heroVisual.getBoundingClientRect();
+
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+            heroVisual.style.transform = `
+                perspective(900px)
+                rotateY(${x * 12}deg)
+                rotateX(${-y * 12}deg)
+            `;
+        });
+
+        heroVisual.addEventListener("pointerleave", () => {
+            heroVisual.style.transform = "";
+        });
+    }
+
+
+    /* =====================================
+       11. SCROLL REVEAL
+    ===================================== */
+
+    const revealElements = document.querySelectorAll(
+        ".section-heading, .dashboard-card, .monitor-item, " +
+        ".features-grid .card, .info-box"
+    );
+
+    if ("IntersectionObserver" in window && !reduceMotion) {
+
+        const observer = new IntersectionObserver(entries => {
+
             entries.forEach(entry => {
+
                 if (entry.isIntersecting) {
                     entry.target.classList.add("visible");
                     observer.unobserve(entry.target);
                 }
+
             });
+
         }, {
             threshold: 0.12
         });
@@ -237,6 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
             element.classList.add("reveal");
             observer.observe(element);
         });
+
     } else {
         revealElements.forEach(element => {
             element.classList.add("visible");
@@ -244,92 +393,58 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ---------- 3D Mouse Tilt ----------
-    const tiltElements = document.querySelectorAll(
-        ".dashboard-card, .monitor-item, .features-grid > .card"
-    );
+    /* =====================================
+       12. BACK TO TOP BUTTON
+    ===================================== */
 
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-        tiltElements.forEach(element => {
-            element.addEventListener("mousemove", event => {
-                const rect = element.getBoundingClientRect();
+    const backToTop = document.createElement("button");
 
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
+    backToTop.className = "back-to-top";
+    backToTop.type = "button";
+    backToTop.textContent = "↑";
+    backToTop.setAttribute("aria-label", "بازگشت به بالای صفحه");
 
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
+    document.body.appendChild(backToTop);
 
-                const rotateY = ((x - centerX) / centerX) * 5;
-                const rotateX = ((centerY - y) / centerY) * 5;
+    window.addEventListener("scroll", () => {
 
-                element.style.transform =
-                    `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-            });
+        if (window.scrollY > 350) {
+            backToTop.classList.add("show");
+        } else {
+            backToTop.classList.remove("show");
+        }
 
-            element.addEventListener("mouseleave", () => {
-                element.style.transform = "";
-            });
-        });
-    }
-
-
-    // ---------- Hero Parallax ----------
-    const heroVisual = $(".hero-visual");
-
-    if (
-        heroVisual &&
-        window.matchMedia("(hover: hover) and (pointer: fine)").matches
-    ) {
-        document.addEventListener("mousemove", event => {
-            const x = (event.clientX / window.innerWidth - 0.5) * 10;
-            const y = (event.clientY / window.innerHeight - 0.5) * 10;
-
-            heroVisual.style.transform =
-                `translate3d(${x}px, ${y}px, 0)`;
-        });
-    }
-
-
-    // ---------- Back To Top ----------
-    let backToTop = $("#back-to-top");
-
-    if (!backToTop) {
-        backToTop = document.createElement("button");
-        backToTop.id = "back-to-top";
-        backToTop.type = "button";
-        backToTop.textContent = "↑";
-        backToTop.setAttribute("aria-label", "بازگشت به بالای صفحه");
-        document.body.appendChild(backToTop);
-    }
-
-    function updateBackToTop() {
-        backToTop.classList.toggle(
-            "show",
-            window.scrollY > 350
-        );
-    }
-
-    window.addEventListener("scroll", updateBackToTop, {
-        passive: true
-    });
-
-    updateBackToTop();
+    }, { passive: true });
 
     backToTop.addEventListener("click", () => {
         window.scrollTo({
             top: 0,
-            behavior: "smooth"
+            behavior: reduceMotion ? "auto" : "smooth"
         });
     });
 
 
-    // ---------- System Status ----------
-    const siteStatus = $("#site-status");
+    /* =====================================
+       13. ACTIVE NAVIGATION LINK
+    ===================================== */
 
-    if (siteStatus) {
-        siteStatus.textContent = "فعال";
-    }
+    const currentPage = window.location.pathname
+        .split("/")
+        .pop() || "index.html";
+
+    document.querySelectorAll(".nav-links a").forEach(link => {
+
+        const href = link.getAttribute("href");
+
+        if (href === currentPage) {
+            link.classList.add("active");
+        } else {
+            link.classList.remove("active");
+        }
+
+    });
+
 
     console.log("SanaDemo Ultimate 4.0 initialized successfully.");
+
 });
