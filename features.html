@@ -4,376 +4,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b1a">
-    <title>SanaDemo | امکانات هوشمند</title>
+    <meta name="theme-color" content="#080b1c">
+    <meta name="description" content="مرکز نمایش وضعیت آب‌وهوا و پیش‌بینی روزهای آینده در SanaDemo">
+    <title>SanaDemo | مرکز آب‌وهوا</title>
+
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 
     <style>
-        .features-page-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 22px;
-            margin-top: 30px;
+        .weather-page {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+            padding: 65px 0 90px;
+        }
+
+        .feature-page-heading {
+            text-align: center;
+            margin-bottom: 38px;
+            animation: weatherEnter 0.8s ease both;
+        }
+
+        .feature-page-heading h1 {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            margin-bottom: 12px;
+        }
+
+        .feature-page-heading p {
+            color: #aebbd8;
+            line-height: 1.9;
         }
 
         .weather-card {
-            cursor: pointer;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(0, 229, 255, .35);
-            transition: .35s ease;
+            padding: clamp(24px, 5vw, 48px);
+            border: 1px solid rgba(91, 190, 255, 0.3);
+            border-radius: 28px;
+            background: linear-gradient(
+                135deg,
+                rgba(25, 48, 91, 0.78),
+                rgba(12, 17, 43, 0.88)
+            );
+            box-shadow: 0 20px 65px rgba(0, 0, 0, 0.3),
+                        0 0 35px rgba(35, 150, 255, 0.12);
+            transform-style: preserve-3d;
+            animation: weatherEnter 0.9s ease both;
         }
 
-        .weather-card:hover {
-            transform: translateY(-12px) scale(1.025);
-            box-shadow: 0 0 35px rgba(0, 229, 255, .25);
+        .weather-card::before {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: rgba(0, 190, 255, 0.12);
+            filter: blur(65px);
+            top: -100px;
+            left: -70px;
+            pointer-events: none;
         }
 
-        .weather-icon {
-            font-size: 52px;
-            margin-bottom: 15px;
-            animation: weatherFloat 3s ease-in-out infinite;
+        .weather-main {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 25px;
         }
 
-        @keyframes weatherFloat {
-            0%, 100% { transform: translateY(0) rotate(-5deg); }
-            50% { transform: translateY(-12px) rotate(5deg); }
+        .weather-main-info {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .weather-label {
+            color: #91d9ff;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
         }
 
         .weather-temperature {
-            font-size: 38px;
-            font-weight: bold;
-            color: #00e5ff;
+            font-size: clamp(3.5rem, 9vw, 6rem);
+            font-weight: 800;
+            line-height: 1.2;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(66, 190, 255, 0.4);
+        }
+
+        .weather-description {
+            color: #d9eaff;
+            font-size: 1.15rem;
+            margin-top: 8px;
+        }
+
+        .weather-location {
+            color: #9fb4d7;
+            margin-top: 14px;
+            font-size: 0.95rem;
+        }
+
+        .weather-icon {
+            font-size: clamp(5rem, 13vw, 9rem);
+            filter: drop-shadow(0 0 25px rgba(76, 190, 255, 0.45));
+            animation: weatherFloat 4s ease-in-out infinite;
+        }
+
+        .weather-status {
+            position: relative;
+            margin-top: 25px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            color: #c9eaff;
+            background: rgba(70, 160, 255, 0.1);
+            border: 1px solid rgba(100, 190, 255, 0.15);
+            line-height: 1.8;
         }
 
         .weather-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 15px;
             margin-top: 22px;
         }
 
         .weather-detail {
-            padding: 17px;
-            border-radius: 15px;
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.1);
+            padding: 20px 12px;
+            text-align: center;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(130, 190, 255, 0.13);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .weather-detail:hover {
+            transform: translateY(-6px);
+            background: rgba(60, 150, 255, 0.13);
+        }
+
+        .weather-detail span {
+            display: block;
+            color: #9fb4d7;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
         }
 
         .weather-detail strong {
-            display: block;
-            margin-top: 8px;
-            color: #00e5ff;
-            font-size: 19px;
+            color: #fff;
+            font-size: 1.15rem;
+        }
+
+        .weather-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .weather-action {
+            border: 1px solid rgba(95, 200, 255, 0.5);
+            border-radius: 13px;
+            padding: 12px 24px;
+            color: #fff;
+            background: rgba(25, 130, 220, 0.2);
+            font: inherit;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .weather-action:hover {
+            background: rgba(25, 150, 255, 0.4);
+            box-shadow: 0 0 22px rgba(50, 170, 255, 0.25);
+            transform: translateY(-3px);
         }
 
         .weather-panel {
             display: none;
             margin-top: 25px;
-            padding: 25px;
-            border-radius: 22px;
-            background: rgba(13, 20, 45, .8);
-            border: 1px solid rgba(0,229,255,.25);
-            animation: panelAppear .4s ease;
+            animation: weatherEnter 0.5s ease both;
         }
 
         .weather-panel.active {
             display: block;
         }
 
-        @keyframes panelAppear {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .weather-status {
-            color: #aab7d8;
-            margin-top: 12px;
-            line-height: 1.9;
-        }
-
-        .weather-action {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 11px 20px;
-            border-radius: 12px;
-            background: linear-gradient(120deg, #00c8ff, #7655ff);
-            color: white;
-            border: 0;
-            cursor: pointer;
-            font-family: inherit;
+        .weather-panel h2 {
+            margin-bottom: 18px;
+            font-size: 1.35rem;
         }
 
         .weather-forecast {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 12px;
-            margin-top: 20px;
         }
 
         .forecast-item {
-            padding: 15px;
+            padding: 18px 8px;
             text-align: center;
-            border-radius: 14px;
-            background: rgba(255,255,255,.05);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(130, 190, 255, 0.13);
         }
 
-        .feature-page-heading {
-            text-align: center;
-            margin: 65px 0 30px;
+        .forecast-item > * {
+            display: block;
+            margin: 7px auto;
         }
 
-        .feature-page-heading h1 {
-            margin-bottom: 12px;
+        .forecast-item span {
+            color: #aebbd8;
+            font-size: 0.85rem;
         }
 
-        .weather-note {
-            font-size: 13px;
-            color: #aab7d8;
-            line-height: 1.9;
+        .forecast-item strong {
+            color: #fff;
+        }
+
+        @keyframes weatherFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        @keyframes weatherEnter {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .weather-page {
+                padding-top: 40px;
+            }
+
+            .weather-details {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .weather-forecast {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .weather-main {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .weather-icon {
+                order: -1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .weather-card,
+            .weather-icon,
+            .feature-page-heading {
+                animation: none;
+            }
+
+            .weather-detail,
+            .weather-action {
+                transition: none;
+            }
         }
     </style>
 </head>
 
 <body>
-
-<div class="background-effects">
-    <div class="bg-orb orb-one"></div>
-    <div class="bg-orb orb-two"></div>
-    <div class="bg-orb orb-three"></div>
-</div>
-
-<header class="navbar">
-    <div class="container nav-content">
-        <a href="index.html" class="brand">✦ Sana<span>Demo</span></a>
-
-        <button class="menu-toggle" aria-label="باز کردن منو"
-                aria-controls="main-navigation" aria-expanded="false">
-            ☰
-        </button>
-
-        <nav class="nav-links" id="main-navigation">
-            <a href="index.html">خانه</a>
-            <a href="features.html" class="active">امکانات</a>
-            <a href="about.html">درباره ما</a>
-            <a href="contact.html">ارتباط</a>
-        </nav>
+    <div class="background-effects" aria-hidden="true">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
     </div>
-</header>
 
-<main class="container">
+    <header class="container">
+        <nav class="nav-content">
+            <a href="index.html" class="brand">Sana<span>Demo</span></a>
 
-    <section class="feature-page-heading section">
-        <span class="hero-badge">SMART FEATURES</span>
-        <h1 class="gradient-text">مرکز امکانات هوشمند</h1>
-        <p>بررسی قابلیت‌ها، وضعیت دستگاه و اطلاعات زنده محیط</p>
-    </section>
+            <div class="nav-links">
+                <a href="index.html">خانه</a>
+                <a href="features.html" class="active">آب‌وهوا</a>
+                <a href="about.html">درباره ما</a>
+                <a href="contact.html">ارتباط</a>
+            </div>
+        </nav>
+    </header>
 
-    <!-- WEATHER -->
-    <section class="section" id="weather-section">
+    <main class="weather-page">
+        <section class="feature-page-heading">
+            <h1>مرکز آب‌وهوا</h1>
+            <p>وضعیت فعلی هوا و پیش‌بینی روزهای آینده</p>
+        </section>
 
-        <div class="section-heading">
-            <span class="hero-badge">LIVE WEATHER</span>
-            <h2>مرکز آب‌وهوای زنده</h2>
-            <p>اطلاعات آب‌وهوایی منطقه شما با استفاده از موقعیت مکانی مرورگر</p>
-        </div>
+        <section class="weather-card" id="weather-card">
+            <div class="weather-main">
+                <div class="weather-main-info">
+                    <div class="weather-label">وضعیت فعلی آب‌وهوا</div>
 
-        <div class="features-page-grid">
+                    <div class="weather-temperature" id="weather-temperature">
+                        --°
+                    </div>
 
-            <article class="card weather-card" id="weather-card"
-                     role="button" tabindex="0"
-                     aria-controls="weather-panel" aria-expanded="false">
+                    <div class="weather-description" id="weather-description">
+                        در حال دریافت اطلاعات آب‌وهوا...
+                    </div>
 
-                <div class="weather-icon" id="weather-icon">🌤️</div>
-
-                <h3>آب‌وهوای منطقه شما</h3>
-
-                <div class="weather-temperature" id="weather-temperature">
-                    --°
+                    <div class="weather-location" id="weather-location">
+                        موقعیت مکانی مشخص نشده است
+                    </div>
                 </div>
 
-                <p id="weather-description">در انتظار دریافت اطلاعات...</p>
+                <div class="weather-icon" id="weather-icon" aria-hidden="true">
+                    🌤️
+                </div>
+            </div>
 
-                <p id="weather-location">موقعیت مکانی هنوز مشخص نشده</p>
-
-                <p class="weather-status" id="weather-card-status">
-                    برای دریافت آب‌وهوا، دسترسی موقعیت مکانی را مجاز کنید.
-                </p>
-
-                <button class="weather-action" type="button" id="weather-open">
-                    مشاهده جزئیات
-                </button>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🖥️</div>
-                <h3>مانیتور دستگاه</h3>
-                <p id="feature-live-device">در حال بررسی دستگاه...</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🌐</div>
-                <h3>وضعیت اینترنت</h3>
-                <p id="feature-live-network">در حال بررسی اتصال...</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">📡</div>
-                <h3>نوع اتصال</h3>
-                <p id="feature-live-connection">در حال بررسی...</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🌍</div>
-                <h3>زبان مرورگر</h3>
-                <p id="feature-live-language">در حال بررسی...</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">⚡</div>
-                <h3>زمان بارگذاری</h3>
-                <p id="feature-live-load">در حال بررسی...</p>
-            </article>
-
-        </div>
-
-        <!-- WEATHER DETAILS -->
-        <div class="weather-panel" id="weather-panel">
-
-            <h2>جزئیات آب‌وهوای منطقه</h2>
-
-            <p id="weather-detail-status" class="weather-status">
-                اطلاعات آب‌وهوا هنوز دریافت نشده است.
-            </p>
+            <div class="weather-status" id="weather-card-status" role="status" aria-live="polite">
+                برای نمایش آب‌وهوای منطقه، اجازه موقعیت مکانی مرورگر لازم است.
+            </div>
 
             <div class="weather-details">
-
                 <div class="weather-detail">
-                    🌡️ دمای فعلی
-                    <strong id="weather-detail-temp">--</strong>
-                </div>
-
-                <div class="weather-detail">
-                    💧 رطوبت
+                    <span>💧 رطوبت</span>
                     <strong id="weather-humidity">--</strong>
                 </div>
 
                 <div class="weather-detail">
-                    💨 سرعت باد
+                    <span>💨 سرعت باد</span>
                     <strong id="weather-wind">--</strong>
                 </div>
 
                 <div class="weather-detail">
-                    🌡️ احساس دما
+                    <span>🌡️ دمای احساس‌شده</span>
                     <strong id="weather-feels">--</strong>
                 </div>
 
                 <div class="weather-detail">
-                    🌧️ احتمال بارش
+                    <span>🌧️ احتمال بارش</span>
                     <strong id="weather-rain">--</strong>
                 </div>
 
                 <div class="weather-detail">
-                    ☀️ شاخص UV
+                    <span>☀️ شاخص UV</span>
                     <strong id="weather-uv">--</strong>
                 </div>
-
             </div>
 
-            <h3 style="margin-top:30px;">پیش‌بینی روزهای آینده</h3>
-
-            <div class="weather-forecast" id="weather-forecast">
-                <div class="forecast-item">در انتظار اطلاعات...</div>
+            <div class="weather-actions">
+                <button class="weather-action" id="weather-open" type="button">
+                    نمایش پیش‌بینی ۵ روز آینده
+                </button>
             </div>
 
-            <p class="weather-note">
-                اطلاعات هواشناسی از سرویس خارجی دریافت می‌شود.
-                موقعیت مکانی فقط با اجازه مرورگر قابل دریافت است.
-            </p>
+            <div class="weather-panel" id="weather-panel">
+                <h2>پیش‌بینی آب‌وهوا</h2>
 
-            <button class="weather-action" id="weather-refresh" type="button">
-                دریافت مجدد اطلاعات
-            </button>
+                <div class="weather-status" id="weather-detail-status" role="status">
+                    اطلاعات پیش‌بینی در حال بارگذاری است.
+                </div>
 
-        </div>
+                <div class="weather-forecast" id="weather-forecast"></div>
+            </div>
 
-    </section>
+            <div class="weather-status" id="weather-detail-temp">
+                اطلاعات آب‌وهوا از سرویس هواشناسی دریافت می‌شود.
+            </div>
+        </section>
+    </main>
 
-    <!-- OTHER FEATURES -->
-    <section class="section">
-
-        <div class="section-heading">
-            <span class="hero-badge">OUR FEATURES</span>
-            <h2>سایر قابلیت‌ها</h2>
-        </div>
-
-        <div class="features-page-grid">
-
-            <article class="card">
-                <div class="card-icon">💎</div>
-                <h3>Glassmorphism</h3>
-                <p>طراحی شیشه‌ای و مدرن با افکت محوشدگی.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">✨</div>
-                <h3>Neon Design</h3>
-                <p>نورپردازی نئونی و رنگ‌های پویا.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🌀</div>
-                <h3>Interactive 3D</h3>
-                <p>افکت عمق و حرکت تعاملی کارت‌ها.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🎯</div>
-                <h3>Smart Hover</h3>
-                <p>واکنش کارت‌ها به حرکت نشانگر موس.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">📱</div>
-                <h3>Responsive Design</h3>
-                <p>نمایش سازگار با موبایل، تبلت و دسکتاپ.</p>
-            </article>
-
-            <article class="card">
-                <div class="card-icon">🎬</div>
-                <h3>Modern Animation</h3>
-                <p>انیمیشن‌های نرم و پس‌زمینه پویا.</p>
-            </article>
-
-        </div>
-    </section>
-
-    <section class="info-box section">
-        <h3>🔐 حریم خصوصی</h3>
-        <p>
-            دریافت موقعیت مکانی فقط با اجازه مرورگر انجام می‌شود.
-            این پروژه یک دمو مستقل است و اطلاعات موقعیت مکانی را
-            در پایگاه داده اختصاصی ذخیره نمی‌کند.
-        </p>
-    </section>
-
-    <section class="info-box section">
-        <h3>اطلاعیه</h3>
-        <p>
-            SanaDemo یک پروژه آزمایشی و مستقل است و وابستگی رسمی
-            به سامانه‌های دولتی یا قضایی ندارد.
-        </p>
-        <a href="https://sana.adliran.ir" target="_blank"
-           rel="noopener noreferrer">مشاهده سامانه رسمی ثنا</a>
-    </section>
-
-</main>
-
-<footer class="footer">
-    <p>© 2026 SanaDemo | پروژه آزمایشی و مستقل</p>
-</footer>
-
-<script src="script.js" defer></script>
-
+    <footer class="footer">
+        <p>© SanaDemo | پروژه مستقل و آزمایشی</p>
+    </footer>
 </body>
 </html>
