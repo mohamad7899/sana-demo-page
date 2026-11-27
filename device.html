@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080b1c">
-    <meta name="description" content="مشخصات و اطلاعات قابل‌دسترسی دستگاه در SanaDemo">
 
-    <title>SanaDemo | اطلاعات دستگاه</title>
+    <meta name="description" content="نمای کلی دستگاه در SanaDemo">
+
+    <title>SanaDemo | دستگاه من</title>
 
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
@@ -47,24 +48,27 @@
         </div>
     </header>
 
+    <!-- Main Device Page -->
     <main class="device-page">
 
-        <!-- Page Header -->
+        <!-- Hero -->
         <section class="device-hero">
 
             <span class="hero-badge">
-                DEVICE INFORMATION CENTER
+                DEVICE INFORMATION
             </span>
 
-            <div class="device-hero-icon">📱</div>
+            <div class="device-hero-icon">
+                📱
+            </div>
 
             <h1>
-                اطلاعات کامل
-                <span>دستگاه</span>
+                دستگاه
+                <span>من</span>
             </h1>
 
             <p>
-                بررسی مشخصات دستگاهی که با آن وارد SanaDemo شده‌اید
+                نمای کلی اطلاعات دستگاه متصل به SanaDemo
             </p>
 
             <a href="index.html#dashboard" class="btn-secondary">
@@ -73,176 +77,46 @@
 
         </section>
 
-        <!-- Device Overview -->
+        <!-- Device Overview Card -->
         <section class="device-overview dashboard-card">
 
             <div class="card-icon">🖥️</div>
 
-            <h2>نمای کلی دستگاه</h2>
+            <h2>مشخصات دستگاه</h2>
 
-            <p>اطلاعات عمومی قابل‌دسترسی از مرورگر</p>
+            <p>
+                اطلاعات عمومی دستگاه شما
+            </p>
 
             <div class="device-grid">
 
                 <div class="device-card">
                     <span>نوع دستگاه</span>
-                    <strong id="device-type">در حال بررسی...</strong>
+                    <strong id="device-type">
+                        در حال بررسی...
+                    </strong>
                 </div>
 
                 <div class="device-card">
                     <span>سیستم‌عامل</span>
-                    <strong id="device-os">در حال بررسی...</strong>
+                    <strong id="device-os">
+                        در حال بررسی...
+                    </strong>
                 </div>
 
                 <div class="device-card">
                     <span>مدل دستگاه</span>
-                    <strong id="device-model">در حال بررسی...</strong>
+                    <strong id="device-model">
+                        در حال بررسی...
+                    </strong>
                 </div>
 
                 <div class="device-card">
                     <span>مرورگر</span>
-                    <strong id="device-browser">در حال بررسی...</strong>
+                    <strong id="device-browser">
+                        در حال بررسی...
+                    </strong>
                 </div>
-
-            </div>
-
-        </section>
-
-        <!-- Display Information -->
-        <section class="device-detail-section">
-
-            <div class="section-title">
-                <span>DISPLAY INFORMATION</span>
-                <h2>مشخصات صفحه‌نمایش</h2>
-            </div>
-
-            <div class="device-detail-grid">
-
-                <article class="dashboard-card">
-                    <div class="card-icon">📐</div>
-                    <h3>رزولوشن صفحه</h3>
-                    <strong id="device-screen">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🪟</div>
-                    <h3>اندازه پنجره مرورگر</h3>
-                    <strong id="device-window">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🔍</div>
-                    <h3>ضریب پیکسل</h3>
-                    <strong id="device-pixel-ratio">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🎨</div>
-                    <h3>عمق رنگ</h3>
-                    <strong id="device-color-depth">در حال بررسی...</strong>
-                </article>
-
-            </div>
-
-        </section>
-
-        <!-- Processor Information -->
-        <section class="device-detail-section">
-
-            <div class="section-title">
-                <span>PROCESSOR INFORMATION</span>
-                <h2>مشخصات پردازنده</h2>
-            </div>
-
-            <div class="device-detail-grid">
-
-                <article class="dashboard-card">
-                    <div class="card-icon">⚙️</div>
-                    <h3>هسته‌های منطقی پردازنده</h3>
-                    <strong id="device-cores">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🧠</div>
-                    <h3>حافظه دستگاه</h3>
-                    <strong id="device-memory">در حال بررسی...</strong>
-                </article>
-
-            </div>
-
-        </section>
-
-        <!-- Network Information -->
-        <section class="device-detail-section">
-
-            <div class="section-title">
-                <span>NETWORK INFORMATION</span>
-                <h2>مشخصات شبکه و اتصال</h2>
-            </div>
-
-            <div class="device-detail-grid">
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🌐</div>
-                    <h3>وضعیت اینترنت</h3>
-                    <strong id="device-online">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">📶</div>
-                    <h3>نوع اتصال</h3>
-                    <strong id="device-network">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">⚡</div>
-                    <h3>سرعت تخمینی اتصال</h3>
-                    <strong id="device-speed">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🌍</div>
-                    <h3>IP عمومی</h3>
-                    <strong id="device-public-ip">در حال دریافت...</strong>
-                </article>
-
-            </div>
-
-        </section>
-
-        <!-- Browser Information -->
-        <section class="device-detail-section">
-
-            <div class="section-title">
-                <span>BROWSER INFORMATION</span>
-                <h2>مشخصات مرورگر</h2>
-            </div>
-
-            <div class="device-detail-grid">
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🗣️</div>
-                    <h3>زبان مرورگر</h3>
-                    <strong id="device-language">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🕒</div>
-                    <h3>منطقه زمانی</h3>
-                    <strong id="device-timezone">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🍪</div>
-                    <h3>وضعیت کوکی‌ها</h3>
-                    <strong id="device-cookies">در حال بررسی...</strong>
-                </article>
-
-                <article class="dashboard-card">
-                    <div class="card-icon">🔋</div>
-                    <h3>اطلاعات باتری</h3>
-                    <strong id="device-battery">در دسترس نیست</strong>
-                </article>
 
             </div>
 
@@ -259,6 +133,7 @@
 
     <!-- Footer -->
     <footer>
+
         <div class="footer-content">
 
             <a href="index.html" class="logo">
@@ -272,6 +147,7 @@
             </p>
 
         </div>
+
     </footer>
 
 </body>
