@@ -16,28 +16,24 @@ document.addEventListener("DOMContentLoaded", function () {
     function getBrowserInfo() {
         const ua = navigator.userAgent;
 
-        let browser = "مرورگر ناشناخته";
+        if (ua.includes("Edg/")) return "Microsoft Edge";
+        if (ua.includes("Chrome/")) return "Google Chrome";
+        if (ua.includes("Firefox/")) return "Mozilla Firefox";
+        if (ua.includes("Safari/")) return "Safari";
 
-        if (ua.includes("Edg/")) browser = "Microsoft Edge";
-        else if (ua.includes("Chrome/")) browser = "Google Chrome";
-        else if (ua.includes("Firefox/")) browser = "Mozilla Firefox";
-        else if (ua.includes("Safari/")) browser = "Safari";
-
-        return browser;
+        return "مرورگر ناشناخته";
     }
 
     function getDeviceInfo() {
         const ua = navigator.userAgent;
 
-        let device = "دستگاه ناشناخته";
+        if (/Android/i.test(ua)) return "Android";
+        if (/iPhone|iPad|iPod/i.test(ua)) return "Apple iOS";
+        if (/Windows/i.test(ua)) return "Windows";
+        if (/Macintosh|Mac OS/i.test(ua)) return "macOS";
+        if (/Linux/i.test(ua)) return "Linux";
 
-        if (/Android/i.test(ua)) device = "Android";
-        else if (/iPhone|iPad|iPod/i.test(ua)) device = "Apple iOS";
-        else if (/Windows/i.test(ua)) device = "Windows";
-        else if (/Macintosh|Mac OS/i.test(ua)) device = "macOS";
-        else if (/Linux/i.test(ua)) device = "Linux";
-
-        return device;
+        return "دستگاه ناشناخته";
     }
 
     /* =========================================
@@ -47,10 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateClock() {
         const now = new Date();
 
-        setText(
-            "live-clock",
-            now.toLocaleTimeString("fa-IR")
-        );
+        setText("live-clock", now.toLocaleTimeString("fa-IR"));
 
         setText(
             "live-date",
@@ -77,15 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
     setText("feature-live-device", deviceInfo);
     setText("browser-info", browserInfo);
 
-    setText(
-        "browser-language",
-        navigator.language || "نامشخص"
-    );
-
-    setText(
-        "feature-live-language",
-        navigator.language || "نامشخص"
-    );
+    setText("browser-language", navigator.language || "نامشخص");
+    setText("feature-live-language", navigator.language || "نامشخص");
 
     setText(
         "screen-resolution",
@@ -98,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateNetwork() {
         const online = navigator.onLine;
-
         const status = online ? "متصل" : "قطع";
 
         setText("network-status", status);
@@ -123,11 +108,14 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("online", updateNetwork);
     window.addEventListener("offline", updateNetwork);
 
-    if (navigator.connection) {
-        navigator.connection.addEventListener(
-            "change",
-            updateNetwork
-        );
+    const browserConnection =
+        navigator.connection ||
+        navigator.mozConnection ||
+        navigator.webkitConnection;
+
+    if (browserConnection &&
+        typeof browserConnection.addEventListener === "function") {
+        browserConnection.addEventListener("change", updateNetwork);
     }
 
     /* =========================================
@@ -135,19 +123,11 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================= */
 
     window.addEventListener("load", function () {
-        const loadTime = Math.round(
-            performance.now()
-        );
+        const loadTime = Math.round(performance.now());
+        const result = loadTime + " ms";
 
-        setText(
-            "page-load-time",
-            loadTime + " ms"
-        );
-
-        setText(
-            "feature-live-load",
-            loadTime + " ms"
-        );
+        setText("page-load-time", result);
+        setText("feature-live-load", result);
     });
 
     /* =========================================
@@ -166,14 +146,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
 
-            setText("public-ip", data.ip);
+            setText("public-ip", data.ip || "در دسترس نیست");
 
         } catch (error) {
             setText("public-ip", "در دسترس نیست");
         }
     }
 
-    getPublicIP();
+    if (document.getElementById("public-ip")) {
+        getPublicIP();
+    }
 
     /* =========================================
        7. MOBILE NAVIGATION
@@ -183,12 +165,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const navLinks = $(".nav-links");
 
     if (menuToggle && navLinks) {
+
         menuToggle.addEventListener("click", function () {
-            navLinks.classList.toggle("active");
+            const isOpen = navLinks.classList.toggle("active");
 
             menuToggle.setAttribute(
                 "aria-expanded",
-                navLinks.classList.contains("active")
+                String(isOpen)
             );
         });
 
@@ -198,10 +181,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 menuToggle.setAttribute("aria-expanded", "false");
             });
         });
+
+        document.addEventListener("click", function (event) {
+            if (
+                !navLinks.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                navLinks.classList.remove("active");
+                menuToggle.setAttribute("aria-expanded", "false");
+            }
+        });
     }
 
     /* =========================================
-       8. WEATHER SYSTEM
+       8. WEATHER ELEMENTS
     ========================================= */
 
     const weatherCard = $("#weather-card");
@@ -215,132 +208,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const weatherLocation = $("#weather-location");
     const weatherIcon = $("#weather-icon");
 
-    const weatherCardStatus = $("#weather-card-status");
-    const weatherDetailStatus = $("#weather-detail-status");
-
     let lastCoordinates = null;
+    let weatherRequestInProgress = false;
 
     const weatherConditions = {
-        0: {
-            description: "آسمان صاف",
-            icon: "☀️",
-            theme: "sunny"
-        },
-        1: {
-            description: "عمدتاً صاف",
-            icon: "🌤️",
-            theme: "partly-cloudy"
-        },
-        2: {
-            description: "نیمه‌ابری",
-            icon: "⛅",
-            theme: "partly-cloudy"
-        },
-        3: {
-            description: "ابری",
-            icon: "☁️",
-            theme: "cloudy"
-        },
-        45: {
-            description: "مه‌آلود",
-            icon: "🌫️",
-            theme: "foggy"
-        },
-        48: {
-            description: "مه یخ‌زده",
-            icon: "🌫️",
-            theme: "foggy"
-        },
-        51: {
-            description: "نم‌نم باران",
-            icon: "🌦️",
-            theme: "rainy"
-        },
-        53: {
-            description: "باران ملایم",
-            icon: "🌧️",
-            theme: "rainy"
-        },
-        55: {
-            description: "باران نسبتاً شدید",
-            icon: "🌧️",
-            theme: "rainy"
-        },
-        61: {
-            description: "بارندگی خفیف",
-            icon: "🌦️",
-            theme: "rainy"
-        },
-        63: {
-            description: "بارندگی متوسط",
-            icon: "🌧️",
-            theme: "rainy"
-        },
-        65: {
-            description: "بارندگی شدید",
-            icon: "🌧️",
-            theme: "rainy"
-        },
-        71: {
-            description: "بارش برف خفیف",
-            icon: "🌨️",
-            theme: "snowy"
-        },
-        73: {
-            description: "بارش برف",
-            icon: "❄️",
-            theme: "snowy"
-        },
-        75: {
-            description: "بارش برف شدید",
-            icon: "❄️",
-            theme: "snowy"
-        },
-        77: {
-            description: "دانه‌های برف",
-            icon: "❄️",
-            theme: "snowy"
-        },
-        80: {
-            description: "رگبار خفیف",
-            icon: "🌦️",
-            theme: "rainy"
-        },
-        81: {
-            description: "رگبار باران",
-            icon: "🌧️",
-            theme: "rainy"
-        },
-        82: {
-            description: "رگبار شدید",
-            icon: "🌧️",
-            theme: "rainy"
-        },
-        85: {
-            description: "رگبار برف",
-            icon: "🌨️",
-            theme: "snowy"
-        },
-        86: {
-            description: "رگبار برف شدید",
-            icon: "❄️",
-            theme: "snowy"
-        },
-        95: {
-            description: "رعد و برق",
-            icon: "⛈️",
-            theme: "stormy"
-        },
-        96: {
-            description: "طوفان همراه با تگرگ",
-            icon: "⛈️",
-            theme: "stormy"
-        },
-        99: {
-            description: "طوفان شدید",
-            icon: "⛈️",
-            theme: "stormy"
-        }
+        0: { description: "آسمان صاف", icon: "☀️", theme: "sunny" },
+        1: { description: "عمدتاً صاف", icon: "🌤️", theme: "partly-cloudy" },
+        2: { description: "نیمه‌ابری", icon: "⛅", theme: "partly-cloudy" },
+        3: { description: "ابری", icon: "☁️", theme: "cloudy" },
+        45: { description: "مه‌آلود", icon: "🌫️", theme: "foggy" },
+        48: { description: "مه یخ‌زده", icon: "🌫️", theme: "foggy" },
+        51: { description: "نم‌نم باران", icon: "🌦️", theme: "rainy" },
+        53: { description: "باران ملایم", icon: "🌧️", theme: "rainy" },
+        55: { description: "باران نسبتاً شدید", icon: "🌧️", theme: "rainy" },
+        61: { description: "بارندگی خفیف", icon: "🌦️", theme: "rainy" },
+        63: { description: "بارندگی متوسط", icon: "🌧️", theme: "rainy" },
+        65: { description: "بارندگی شدید", icon: "🌧️", theme: "rainy" },
+        71: { description: "بارش برف خفیف", icon: "🌨️", theme: "snowy" },
+        73: { description: "بارش برف", icon: "❄️", theme: "snowy" },
+        75: { description: "بارش برف شدید", icon: "❄️", theme: "snowy" },
+        77: { description: "دانه‌های برف", icon: "❄️", theme: "snowy" },
+        80: { description: "رگبار خفیف", icon: "🌦️", theme: "rainy" },
+        81: { description: "رگبار باران", icon: "🌧️", theme: "rainy" },
+        82: { description: "رگبار شدید", icon: "🌧️", theme: "rainy" },
+        85: { description: "رگبار برف", icon: "🌨️", theme: "snowy" },
+        86: { description: "رگبار برف شدید", icon: "❄️", theme: "snowy" },
+        95: { description: "رعد و برق", icon: "⛈️", theme: "stormy" },
+        96: { description: "طوفان همراه با تگرگ", icon: "⛈️", theme: "stormy" },
+        99: { description: "طوفان شدید", icon: "⛈️", theme: "stormy" }
     };
 
     function getWeatherInfo(code) {
@@ -363,10 +258,8 @@ document.addEventListener("DOMContentLoaded", function () {
         sunset
     ) {
         const weather = getWeatherInfo(weatherCode);
-
         let theme = weather.theme;
 
-        // شرایط جوی اولویت بیشتری از زمان روز دارند
         if (theme === "sunny" || theme === "partly-cloudy") {
             if (!isDay) {
                 theme = "night";
@@ -387,7 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
-        // CSS این پروژه تم sunrise دارد؛ sunset به آن نگاشت می‌شود.
         document.body.dataset.weather = theme;
 
         document.documentElement.style.setProperty(
@@ -397,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* =========================================
-       10. REVERSE GEOCODING
+       10. LOCATION NAME
     ========================================= */
 
     async function getLocationName(latitude, longitude) {
@@ -416,11 +308,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.results && data.results.length > 0) {
                 const place = data.results[0];
 
-                return (
-                    place.name ||
-                    place.admin1 ||
-                    "منطقه شما"
-                );
+                return place.name || place.admin1 || "منطقه شما";
             }
 
             return "منطقه شما";
@@ -435,17 +323,14 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================= */
 
     function renderForecast(daily) {
-        const forecastContainer = $("#weather-forecast");
+        const container = $("#weather-forecast");
 
-        if (!forecastContainer || !daily) return;
+        if (!container || !daily || !daily.time) return;
 
-        forecastContainer.innerHTML = "";
+        container.innerHTML = "";
 
-        const days = daily.time || [];
-
-        days.forEach((date, index) => {
-            const code = daily.weather_code[index];
-            const weather = getWeatherInfo(code);
+        daily.time.forEach((date, index) => {
+            const weather = getWeatherInfo(daily.weather_code[index]);
 
             const maxTemp = daily.temperature_2m_max[index];
             const minTemp = daily.temperature_2m_min[index];
@@ -474,8 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 `${Math.round(maxTemp)}° / ${Math.round(minTemp)}°`;
 
             item.append(day, icon, description, temperature);
-
-            forecastContainer.appendChild(item);
+            container.appendChild(item);
         });
     }
 
@@ -504,10 +388,14 @@ document.addEventListener("DOMContentLoaded", function () {
             Math.round(current.apparent_temperature) + "°C"
         );
 
-        setText(
-            "weather-rain",
-            (current.precipitation ?? 0) + " mm"
-        );
+        const rainProbability =
+            daily &&
+            daily.precipitation_probability_max &&
+            daily.precipitation_probability_max[0] !== undefined
+                ? daily.precipitation_probability_max[0] + "%"
+                : "نامشخص";
+
+        setText("weather-rain", rainProbability);
 
         setText(
             "weather-uv",
@@ -522,13 +410,12 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================= */
 
     async function loadWeather(latitude, longitude) {
-        if (weatherCardStatus) {
-            weatherCardStatus.textContent = "در حال دریافت اطلاعات...";
-        }
+        if (weatherRequestInProgress) return;
 
-        if (weatherDetailStatus) {
-            weatherDetailStatus.textContent = "در حال دریافت اطلاعات...";
-        }
+        weatherRequestInProgress = true;
+
+        setText("weather-card-status", "در حال دریافت اطلاعات...");
+        setText("weather-detail-status", "در حال دریافت اطلاعات...");
 
         try {
             const url =
@@ -545,44 +432,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const data = await response.json();
 
-            if (!data.current) {
+            if (!data.current || !data.daily) {
                 throw new Error("Weather data unavailable");
             }
 
             const current = data.current;
             const daily = data.daily;
 
-            const weather = getWeatherInfo(
-                current.weather_code
-            );
-
-            const temperature = Math.round(
-                current.temperature_2m
-            );
+            const weather = getWeatherInfo(current.weather_code);
 
             if (weatherTemperature) {
                 weatherTemperature.textContent =
-                    temperature + "°C";
+                    Math.round(current.temperature_2m) + "°C";
             }
 
             if (weatherDescription) {
-                weatherDescription.textContent =
-                    weather.description;
+                weatherDescription.textContent = weather.description;
             }
 
             if (weatherIcon) {
                 weatherIcon.textContent = weather.icon;
             }
 
-            setText(
-                "weather-card-status",
-                "اطلاعات به‌روز شد"
-            );
-
-            setText(
-                "weather-detail-status",
-                "اطلاعات دریافت شد"
-            );
+            setText("weather-card-status", "اطلاعات به‌روز شد");
+            setText("weather-detail-status", "اطلاعات دریافت شد");
 
             setWeatherTheme(
                 current.weather_code,
@@ -607,15 +480,14 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error("Weather error:", error);
 
-            setText(
-                "weather-card-status",
-                "دریافت اطلاعات ناموفق بود"
-            );
-
+            setText("weather-card-status", "دریافت اطلاعات ناموفق بود");
             setText(
                 "weather-detail-status",
                 "اتصال به سرویس آب‌وهوا برقرار نشد"
             );
+
+        } finally {
+            weatherRequestInProgress = false;
         }
     }
 
@@ -629,18 +501,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 "weather-card-status",
                 "موقعیت مکانی پشتیبانی نمی‌شود"
             );
+
+            setText(
+                "weather-detail-status",
+                "مرورگر شما از موقعیت مکانی پشتیبانی نمی‌کند"
+            );
+
             return;
         }
+
+        setText("weather-card-status", "در انتظار اجازه موقعیت مکانی...");
 
         navigator.geolocation.getCurrentPosition(
             function (position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
 
-                lastCoordinates = {
-                    latitude,
-                    longitude
-                };
+                lastCoordinates = { latitude, longitude };
 
                 loadWeather(latitude, longitude);
             },
@@ -668,23 +545,40 @@ document.addEventListener("DOMContentLoaded", function () {
         );
     }
 
-    requestWeatherLocation();
+    if (weatherCard) {
+        requestWeatherLocation();
+    }
 
     /* =========================================
-       15. WEATHER CARD INTERACTION
+       15. WEATHER PANEL INTERACTION
     ========================================= */
 
     function toggleWeatherPanel() {
         if (!weatherPanel) return;
 
-        weatherPanel.classList.toggle("active");
+        const isOpen = weatherPanel.classList.toggle("active");
+
+        if (weatherCard) {
+            weatherCard.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+        }
     }
 
     if (weatherCard) {
         weatherCard.addEventListener("click", function (event) {
             if (event.target.closest("#weather-open")) return;
-
             toggleWeatherPanel();
+        });
+
+        weatherCard.addEventListener("keydown", function (event) {
+            if (event.target !== weatherCard) return;
+
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                toggleWeatherPanel();
+            }
         });
     }
 
@@ -718,39 +612,38 @@ document.addEventListener("DOMContentLoaded", function () {
         ".dashboard-card, .monitor-item, .features-grid .card, .features-page-grid .card"
     );
 
-    tiltCards.forEach(card => {
-        card.addEventListener("pointermove", function (event) {
-            if (event.pointerType === "touch") return;
+    const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    ).matches;
 
-            const rect = card.getBoundingClientRect();
+    if (!reduceMotion) {
+        tiltCards.forEach(card => {
+            card.addEventListener("pointermove", function (event) {
+                if (event.pointerType === "touch") return;
 
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+                const rect = card.getBoundingClientRect();
 
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
 
-            const rotateX = (centerY - y) / 18;
-            const rotateY = (x - centerX) / 18;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
 
-            card.style.transform =
-                `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+                const rotateX = (centerY - y) / 18;
+                const rotateY = (x - centerX) / 18;
 
-            card.style.setProperty(
-                "--mouse-x",
-                `${x}px`
-            );
+                card.style.transform =
+                    `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
 
-            card.style.setProperty(
-                "--mouse-y",
-                `${y}px`
-            );
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+            });
+
+            card.addEventListener("pointerleave", function () {
+                card.style.transform = "";
+            });
         });
-
-        card.addEventListener("pointerleave", function () {
-            card.style.transform = "";
-        });
-    });
+    }
 
     /* =========================================
        17. HERO PARALLAX
@@ -758,7 +651,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const heroVisual = $(".hero-visual");
 
-    if (heroVisual) {
+    if (heroVisual && !reduceMotion) {
         document.addEventListener("mousemove", function (event) {
             if (window.innerWidth < 768) return;
 
@@ -778,10 +671,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================= */
 
     const revealElements = document.querySelectorAll(
-        ".section-heading, .dashboard-card, .monitor-item, .features-grid .card, .features-page-grid .card, .info-box, .feature-detail"
+        ".section-heading, .section-title, .dashboard-card, .monitor-item, .features-grid .card, .features-page-grid .card, .info-box, .feature-detail"
     );
 
-    if ("IntersectionObserver" in window) {
+    if ("IntersectionObserver" in window && !reduceMotion) {
         const revealObserver = new IntersectionObserver(
             function (entries, observer) {
                 entries.forEach(entry => {
@@ -791,15 +684,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 });
             },
-            {
-                threshold: 0.12
-            }
+            { threshold: 0.12 }
         );
 
         revealElements.forEach(element => {
             element.classList.add("reveal");
             revealObserver.observe(element);
         });
+
     } else {
         revealElements.forEach(element => {
             element.classList.add("visible");
@@ -814,6 +706,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const backToTop = document.createElement("button");
 
         backToTop.id = "back-to-top";
+        backToTop.type = "button";
         backToTop.textContent = "↑";
         backToTop.setAttribute("aria-label", "بازگشت به بالا");
 
@@ -862,175 +755,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (linkPage === currentPage) {
             link.classList.add("active");
+        } else {
+            link.classList.remove("active");
         }
     });
-
-    /* =========================================
-       21. LIVE WEATHER THEME TEST PANEL
-    ========================================= */
-
-    if (!document.getElementById("weather-test-panel")) {
-
-        const panel = document.createElement("div");
-
-        panel.id = "weather-test-panel";
-
-        panel.innerHTML = `
-            <div class="weather-test-header">
-                <span>🌦️ آزمایش تم آب‌وهوا</span>
-                <button id="weather-test-close" aria-label="بستن">×</button>
-            </div>
-
-            <div class="weather-test-content">
-                <p>یک وضعیت آب‌وهوایی انتخاب کن:</p>
-
-                <div class="weather-test-buttons">
-                    <button data-theme="sunny">☀️ آفتابی</button>
-                    <button data-theme="partly-cloudy">🌤️ نیمه‌ابری</button>
-                    <button data-theme="cloudy">☁️ ابری</button>
-                    <button data-theme="rainy">🌧️ بارانی</button>
-                    <button data-theme="snowy">❄️ برفی</button>
-                    <button data-theme="stormy">⛈️ طوفانی</button>
-                    <button data-theme="foggy">🌫️ مه‌آلود</button>
-                    <button data-theme="sunrise">🌅 طلوع و غروب</button>
-                    <button data-theme="night">🌙 شب</button>
-                </div>
-
-                <button id="weather-test-reset">
-                    ↩ بازگشت به آب‌وهوای واقعی
-                </button>
-            </div>
-        `;
-
-        const panelStyle = document.createElement("style");
-
-        panelStyle.textContent = `
-            #weather-test-panel {
-                position: fixed;
-                bottom: 20px;
-                left: 20px;
-                width: min(320px, calc(100vw - 40px));
-                z-index: 99998;
-                direction: rtl;
-                color: #fff;
-                background: rgba(10, 15, 40, .94);
-                border: 1px solid rgba(0, 225, 255, .5);
-                border-radius: 18px;
-                backdrop-filter: blur(18px);
-                box-shadow: 0 0 25px rgba(0, 225, 255, .2);
-                font-family: Tahoma, sans-serif;
-                overflow: hidden;
-            }
-
-            .weather-test-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 13px 15px;
-                background: rgba(0, 225, 255, .12);
-                font-weight: bold;
-            }
-
-            #weather-test-close {
-                color: white;
-                background: transparent;
-                border: none;
-                font-size: 23px;
-                cursor: pointer;
-            }
-
-            .weather-test-content {
-                padding: 14px;
-            }
-
-            .weather-test-content p {
-                font-size: 12px;
-                margin: 0 0 12px;
-            }
-
-            .weather-test-buttons {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-
-            .weather-test-buttons button,
-            #weather-test-reset {
-                color: white;
-                background: rgba(255,255,255,.09);
-                border: 1px solid rgba(255,255,255,.17);
-                border-radius: 10px;
-                padding: 10px 6px;
-                cursor: pointer;
-                font-family: inherit;
-                font-size: 12px;
-                transition: .25s ease;
-            }
-
-            .weather-test-buttons button:hover {
-                background: rgba(0,225,255,.22);
-                border-color: #00e5ff;
-                transform: translateY(-3px);
-                box-shadow: 0 0 14px rgba(0,225,255,.25);
-            }
-
-            .weather-test-buttons button.selected {
-                outline: 2px solid #00e5ff;
-                background: rgba(0,225,255,.2);
-            }
-
-            #weather-test-reset {
-                width: 100%;
-                margin-top: 12px;
-                background: rgba(0,180,130,.2);
-            }
-
-            #weather-test-reset:hover {
-                background: rgba(0,180,130,.4);
-            }
-
-            @media (max-width: 480px) {
-                #weather-test-panel {
-                    bottom: 10px;
-                    left: 10px;
-                }
-            }
-
-            @media (prefers-reduced-motion: reduce) {
-                #weather-test-panel * {
-                    transition: none !important;
-                }
-            }
-        `;
-
-        document.head.appendChild(panelStyle);
-        document.body.appendChild(panel);
-
-        // انتخاب تم آزمایشی
-        panel.querySelectorAll("[data-theme]").forEach(button => {
-            button.addEventListener("click", function () {
-                const selectedTheme = this.dataset.theme;
-
-                document.body.dataset.weather = selectedTheme;
-
-                panel.querySelectorAll("[data-theme]").forEach(item => {
-                    item.classList.remove("selected");
-                });
-
-                this.classList.add("selected");
-            });
-        });
-
-        // بستن پنل
-        $("#weather-test-close").addEventListener("click", function () {
-            panel.remove();
-        });
-
-        // بازگشت به آب‌وهوای واقعی
-        $("#weather-test-reset").addEventListener("click", function () {
-            location.reload();
-        });
-    }
 
     console.log("SanaDemo Advanced System Loaded Successfully 🚀");
 });
