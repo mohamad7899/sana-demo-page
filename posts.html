@@ -5,26 +5,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080b1c">
-  <meta name="description" content="مطالب و تازه‌ترین نوشته‌های SanaDemo">
-  <title>مطالب | SanaDemo</title>
+  <meta name="description" content="مطالب و نوشته‌های منتشرشده در SanaDemo">
+  <title>SanaDemo | مطالب</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #080b1c;
+      --panel: rgba(18, 24, 50, .78);
+      --border: rgba(115, 130, 255, .22);
+      --text: #f2f4ff;
+      --muted: #9ba5c7;
+      --primary: #7567ff;
+      --cyan: #20d9ed;
+    }
+
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
     }
 
     body {
-      font-family: Tahoma, sans-serif;
-      background:
-        radial-gradient(circle at 15% 15%, #17265b 0, transparent 35%),
-        radial-gradient(circle at 85% 80%, #35164d 0, transparent 35%),
-        #080b1c;
-      color: #fff;
       min-height: 100vh;
+      font-family: "Vazirmatn", Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(91, 71, 255, .18), transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(0, 210, 235, .12), transparent 35%),
+        var(--bg);
       overflow-x: hidden;
     }
 
@@ -33,143 +45,195 @@
       text-decoration: none;
     }
 
-    header {
-      width: 100%;
-      padding: 22px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      border-bottom: 1px solid #ffffff18;
-      background: #080b1caa;
+    .background-effects {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .orb {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .25;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    .orb-one {
+      background: #6655ff;
+      top: 10%;
+      right: -100px;
+    }
+
+    .orb-two {
+      background: #00cce8;
+      bottom: 5%;
+      left: -100px;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(35px, -45px, 0); }
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    .navbar {
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 11, 28, .65);
       backdrop-filter: blur(18px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav-content {
+      width: min(1100px, 92%);
+      margin: auto;
+      min-height: 75px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
     }
 
     .logo {
-      font-size: 25px;
-      font-weight: bold;
-      color: #fff;
+      font-size: 23px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     .logo span {
-      color: #00eaff;
+      color: var(--cyan);
     }
 
-    nav {
+    .nav-links {
       display: flex;
-      gap: 22px;
+      align-items: center;
+      gap: 25px;
       flex-wrap: wrap;
     }
 
-    nav a {
-      color: #cbd5f5;
-      transition: .3s;
+    .nav-links a {
+      color: var(--muted);
+      font-size: 14px;
+      transition: .25s;
     }
 
-    nav a:hover {
-      color: #00eaff;
-      text-shadow: 0 0 12px #00eaff;
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--cyan);
     }
 
     .hero {
       text-align: center;
-      padding: 90px 20px 55px;
+      padding: 85px 15px 55px;
     }
 
-    .hero small {
-      color: #00eaff;
-      letter-spacing: 3px;
+    .hero-badge {
+      display: inline-block;
+      padding: 8px 17px;
+      border: 1px solid var(--border);
+      background: rgba(117, 103, 255, .1);
+      border-radius: 30px;
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing: 1px;
+      margin-bottom: 22px;
     }
 
     .hero h1 {
-      font-size: clamp(30px, 5vw, 52px);
-      margin: 22px 0;
-      text-shadow: 0 0 25px #00eaff55;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .hero h1 span {
+      color: var(--cyan);
+      text-shadow: 0 0 25px rgba(32, 217, 237, .35);
     }
 
     .hero p {
-      color: #aab6d8;
+      color: var(--muted);
       line-height: 2;
+      font-size: 15px;
     }
 
-    .posts-container {
-      width: min(1100px, 90%);
-      margin: auto;
-      padding-bottom: 90px;
+    .posts-section {
+      padding: 20px 0 80px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .section-heading h2 {
+      font-size: 23px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .refresh-button {
+      border: 1px solid var(--border);
+      background: rgba(117, 103, 255, .12);
+      color: var(--text);
+      border-radius: 11px;
+      padding: 10px 17px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: .25s;
+    }
+
+    .refresh-button:hover {
+      border-color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .posts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+      gap: 22px;
     }
 
     .post-card {
-      background: linear-gradient(145deg, #17213d, #10152b);
-      border: 1px solid #00eaff35;
-      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 15px 40px #0005;
-      transition: transform .4s, box-shadow .4s;
-      animation: appear .7s ease both;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, .2);
+      transition: transform .35s, border-color .35s, box-shadow .35s;
+      animation: appear .65s ease both;
+      transform-style: preserve-3d;
     }
 
     .post-card:hover {
-      transform: translateY(-9px) rotateX(2deg);
-      box-shadow: 0 18px 45px #00eaff25;
-      border-color: #00eaff;
-    }
-
-    .post-image {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-      display: block;
-    }
-
-    .post-content {
-      padding: 24px;
-    }
-
-    .post-content h2 {
-      font-size: 21px;
-      color: #00eaff;
-      margin-bottom: 15px;
-      line-height: 1.8;
-    }
-
-    .post-body {
-      color: #c5cde5;
-      line-height: 2.2;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-
-    .post-date {
-      display: block;
-      color: #8d9bbd;
-      font-size: 12px;
-      margin-top: 22px;
-    }
-
-    .status {
-      text-align: center;
-      grid-column: 1 / -1;
-      padding: 40px 15px;
-      color: #b7c5e8;
-      line-height: 2.2;
-    }
-
-    footer {
-      text-align: center;
-      padding: 28px;
-      border-top: 1px solid #ffffff18;
-      color: #8290b3;
-      line-height: 2;
+      transform: translateY(-8px);
+      border-color: rgba(32, 217, 237, .55);
+      box-shadow: 0 18px 45px rgba(32, 217, 237, .09);
     }
 
     @keyframes appear {
       from {
         opacity: 0;
-        transform: translateY(35px);
+        transform: translateY(25px);
       }
       to {
         opacity: 1;
@@ -177,19 +241,95 @@
       }
     }
 
-    @media (max-width: 600px) {
-      header {
+    .post-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      background: rgba(255,255,255,.04);
+    }
+
+    .post-content {
+      padding: 22px;
+    }
+
+    .post-date {
+      display: inline-block;
+      color: var(--cyan);
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .post-title {
+      font-size: 19px;
+      line-height: 1.8;
+      margin-bottom: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .post-body {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 2.1;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .state-message {
+      text-align: center;
+      padding: 55px 20px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--panel);
+      color: var(--muted);
+      line-height: 2;
+      grid-column: 1 / -1;
+    }
+
+    .state-icon {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer p {
+      margin-top: 8px;
+    }
+
+    @media(max-width: 650px) {
+      .nav-content {
+        flex-direction: column;
         justify-content: center;
+        padding: 15px 0;
       }
 
-      nav {
+      .nav-links {
         justify-content: center;
         gap: 15px;
-        font-size: 13px;
       }
 
       .hero {
         padding-top: 60px;
+      }
+
+      .post-image {
+        height: 190px;
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
       }
     }
   </style>
@@ -197,116 +337,232 @@
 
 <body>
 
-<header>
-  <a class="logo" href="index.html">✦ Sana<span>Demo</span></a>
+  <div class="background-effects">
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+  </div>
 
-  <nav>
-    <a href="index.html">خانه</a>
-    <a href="features.html">امکانات</a>
-    <a href="posts.html">مطالب</a>
-    <a href="about.html">درباره ما</a>
-    <a href="contact.html">ارتباط</a>
-  </nav>
-</header>
+  <header class="navbar">
+    <div class="nav-content">
 
-<section class="hero">
-  <small>SADEMO DIGITAL CONTENT</small>
-  <h1>مطالب SanaDemo</h1>
-  <p>تازه‌ترین مطالب و نوشته‌های منتشرشده در SanaDemo</p>
-</section>
+      <a href="index.html" class="logo">
+        ✦ Sana<span>Demo</span>
+      </a>
 
-<main class="posts-container" id="postsContainer">
-  <div class="status">در حال دریافت مطالب...</div>
-</main>
+      <nav class="nav-links">
+        <a href="index.html">خانه</a>
+        <a href="features.html">امکانات</a>
+        <a href="posts.html" class="active">مطالب</a>
+        <a href="about.html">درباره ما</a>
+        <a href="contact.html">ارتباط</a>
+      </nav>
 
-<footer>
-  <strong>✦ SanaDemo</strong>
-  <p>Independent Smart Web Experience</p>
-  <p>© 2026 SanaDemo</p>
-</footer>
+    </div>
+  </header>
 
-<script>
-  const SUPABASE_URL =
-    "https://qtuhpiybzgaepdndjlvf.supabase.co";
+  <main class="container">
 
-  // کلید عمومی publishable پروژه خودت را اینجا قرار بده.
-  // از کلید secret یا service_role استفاده نکن.
-  const SUPABASE_PUBLIC_KEY = "YOUR_SUPABASE_PUBLISHABLE_KEY";
+    <section class="hero">
+      <span class="hero-badge">SANADEMO CONTENT CENTER</span>
 
-  const client = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLIC_KEY
-  );
+      <h1>
+        دنیای مطالب
+        <span>SanaDemo</span>
+      </h1>
 
-  const container = document.getElementById("postsContainer");
+      <p>
+        تازه‌ترین مطالب و نوشته‌های منتشرشده در SanaDemo
+        <br>
+        همه مطالب از مرکز مدیریت سایت دریافت می‌شوند.
+      </p>
+    </section>
 
-  function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    })[char]);
-  }
+    <section class="posts-section">
 
-  function formatDate(date) {
-    return new Intl.DateTimeFormat("fa-IR", {
-      dateStyle: "long",
-      timeStyle: "short"
-    }).format(new Date(date));
-  }
-
-  async function loadPosts() {
-    container.innerHTML =
-      '<div class="status">در حال دریافت مطالب...</div>';
-
-    const { data, error } = await client
-      .from("posts")
-      .select("id, title, body, image_url, created_at")
-      .eq("published", true)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error(error);
-      container.innerHTML =
-        '<div class="status">دریافت مطالب با مشکل مواجه شد. لطفاً بعداً دوباره تلاش کنید.</div>';
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      container.innerHTML =
-        '<div class="status">هنوز مطلب منتشرشده‌ای وجود ندارد.</div>';
-      return;
-    }
-
-    container.innerHTML = data.map(post => `
-      <article class="post-card">
-        ${post.image_url ? `
-          <img
-            class="post-image"
-            src="${escapeHTML(post.image_url)}"
-            alt="${escapeHTML(post.title)}"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-          >
-        ` : ""}
-
-        <div class="post-content">
-          <h2>${escapeHTML(post.title)}</h2>
-
-          <div class="post-body">${escapeHTML(post.body)}</div>
-
-          <time class="post-date">
-            ${escapeHTML(formatDate(post.created_at))}
-          </time>
+      <div class="section-heading">
+        <div>
+          <h2>مطالب منتشرشده</h2>
+          <p id="posts-count">در حال دریافت مطالب...</p>
         </div>
-      </article>
-    `).join("");
-  }
 
-  loadPosts();
-</script>
+        <button class="refresh-button" id="refresh-button">
+          ↻ بروزرسانی
+        </button>
+      </div>
+
+      <div class="posts-grid" id="posts-grid">
+        <div class="state-message">
+          <span class="state-icon">⏳</span>
+          در حال دریافت مطالب...
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <a href="index.html" class="logo">✦ Sana<span>Demo</span></a>
+    <p>Independent Smart Web Experience</p>
+    <p>© 2026 SanaDemo</p>
+  </footer>
+
+  <script>
+    // SUPABASE CONFIGURATION
+
+    const SUPABASE_URL = "https://qtuhpiybzgaepdndjlvf.supabase.co";
+
+    const SUPABASE_PUBLIC_KEY =
+      "sb_publishable_7ZXhYgrrVKNNh5VuOnF-zw_6rBYAwkj";
+
+    const client = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLIC_KEY
+    );
+
+    const postsGrid = document.getElementById("posts-grid");
+    const postsCount = document.getElementById("posts-count");
+    const refreshButton = document.getElementById("refresh-button");
+
+    function showState(icon, message) {
+      postsGrid.replaceChildren();
+
+      const state = document.createElement("div");
+      state.className = "state-message";
+
+      const symbol = document.createElement("span");
+      symbol.className = "state-icon";
+      symbol.textContent = icon;
+
+      const text = document.createElement("p");
+      text.textContent = message;
+
+      state.append(symbol, text);
+      postsGrid.appendChild(state);
+    }
+
+    function formatDate(date) {
+      if (!date) return "تاریخ نامشخص";
+
+      const parsed = new Date(date);
+
+      if (Number.isNaN(parsed.getTime())) {
+        return "تاریخ نامشخص";
+      }
+
+      return new Intl.DateTimeFormat("fa-IR", {
+        dateStyle: "long",
+        timeStyle: "short"
+      }).format(parsed);
+    }
+
+    function createPostCard(post, index) {
+      const card = document.createElement("article");
+      card.className = "post-card";
+      card.style.animationDelay = (index * 0.1) + "s";
+
+      if (post.image_url) {
+        try {
+          const imageUrl = new URL(post.image_url);
+
+          if (imageUrl.protocol === "https:") {
+            const image = document.createElement("img");
+            image.className = "post-image";
+            image.src = imageUrl.href;
+            image.alt = post.title || "تصویر مطلب";
+            image.loading = "lazy";
+            image.referrerPolicy = "no-referrer";
+            image.addEventListener("error", function() {
+              image.remove();
+            });
+
+            card.appendChild(image);
+          }
+        } catch (error) {
+          console.warn("Invalid image URL", error);
+        }
+      }
+
+      const content = document.createElement("div");
+      content.className = "post-content";
+
+      const date = document.createElement("span");
+      date.className = "post-date";
+      date.textContent = "📅 " + formatDate(post.created_at);
+
+      const title = document.createElement("h3");
+      title.className = "post-title";
+      title.textContent = post.title || "بدون عنوان";
+
+      const body = document.createElement("p");
+      body.className = "post-body";
+      body.textContent = post.body || "متنی برای این مطلب ثبت نشده است.";
+
+      content.append(date, title, body);
+      card.appendChild(content);
+
+      return card;
+    }
+
+    async function loadPosts() {
+      refreshButton.disabled = true;
+      refreshButton.textContent = "در حال بروزرسانی...";
+
+      try {
+        const { data, error } = await client
+          .from("posts")
+          .select("id, title, body, image_url, created_at")
+          .eq("published", true)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        postsGrid.replaceChildren();
+
+        if (!data || data.length === 0) {
+          postsCount.textContent = "۰ مطلب منتشرشده";
+
+          showState(
+            "📝",
+            "هنوز مطلبی منتشر نشده است. مطالب جدید به‌زودی اینجا نمایش داده می‌شوند."
+          );
+
+          return;
+        }
+
+        postsCount.textContent =
+          new Intl.NumberFormat("fa-IR").format(data.length) +
+          " مطلب منتشرشده";
+
+        data.forEach(function(post, index) {
+          postsGrid.appendChild(createPostCard(post, index));
+        });
+
+      } catch (error) {
+        console.error("Supabase error:", error);
+
+        postsCount.textContent = "خطا در دریافت اطلاعات";
+
+        showState(
+          "⚠️",
+          "دریافت مطالب با مشکل مواجه شد. اتصال اینترنت و تنظیمات دسترسی Supabase را بررسی کن."
+        );
+
+        console.error(error.message);
+
+      } finally {
+        refreshButton.disabled = false;
+        refreshButton.textContent = "↻ بروزرسانی";
+      }
+    }
+
+    refreshButton.addEventListener("click", loadPosts);
+
+    loadPosts();
+
+    // بررسی مطالب جدید هر ۳۰ ثانیه
+    setInterval(loadPosts, 30000);
+  </script>
 
 </body>
 </html>
