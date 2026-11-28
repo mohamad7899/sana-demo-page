@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080b18">
-    <meta name="description" content="درباره پروژه مستقل و آموزشی SanaDemo و فناوری‌های آن.">
+    <meta name="description" content="درباره پروژه مستقل و آموزشی SanaDemo">
     <title>SanaDemo | درباره ما</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,6 @@
 <header class="navbar">
     <div class="container nav-content">
         <a href="index.html" class="brand">✦ Sana<span>Demo</span></a>
-
         <nav class="nav-links">
             <a href="index.html">خانه</a>
             <a href="features.html">امکانات</a>
@@ -31,6 +30,12 @@
         <p>داستان شکل‌گیری و هدف این پروژه آموزشی.</p>
     </section>
 
+    <!-- محتوای منتشرشده از پنل مدیریت -->
+    <section class="section container" id="cms-about-section" hidden>
+        <div class="grid" id="cms-about-content"></div>
+    </section>
+
+    <!-- محتوای اصلی صفحه -->
     <section class="section container">
         <div class="grid">
 
@@ -72,11 +77,9 @@
                 این وب‌سایت وابستگی رسمی به سامانه ثنا،
                 قوه قضاییه یا هیچ نهاد دولتی ندارد.
             </p>
-
             <p>
                 برای استفاده از خدمات رسمی، فقط به نشانی اصلی سامانه مراجعه کنید.
             </p>
-
             <a href="https://sana.adliran.ir"
                class="btn"
                target="_blank"
@@ -90,6 +93,88 @@
 <footer class="footer">
     <p>© 2026 SanaDemo | یک پروژه مستقل و آموزشی</p>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+
+    const SUPABASE_URL = "https://qtuhpiybzgaepdndjlvf.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_7ZXhYgrrVKNNh5VuOnF-zw_6rBYAwkj";
+
+    const client = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+    const section = document.getElementById("cms-about-section");
+    const content = document.getElementById("cms-about-content");
+
+    function addText(tag, value, parent) {
+        if (!value) return;
+
+        const element = document.createElement(tag);
+        element.textContent = value;
+        parent.appendChild(element);
+    }
+
+    function renderSection(item) {
+        const data = item.content || {};
+        const card = document.createElement("article");
+        card.className = "card";
+
+        if (data.icon) {
+            addText("div", data.icon, card);
+        }
+
+        addText("h3", data.title, card);
+        addText("p", data.text || data.description, card);
+
+        if (data.button_text && data.button_url) {
+            try {
+                const url = new URL(data.button_url, location.href);
+
+                if (url.protocol === "https:" || url.protocol === "http:") {
+                    const link = document.createElement("a");
+                    link.className = "btn";
+                    link.textContent = data.button_text;
+                    link.href = url.href;
+                    card.appendChild(link);
+                }
+            } catch (error) {
+                console.warn("Invalid button URL");
+            }
+        }
+
+        if (card.children.length > 0) {
+            content.appendChild(card);
+        }
+    }
+
+    try {
+        const { data, error } = await client
+            .from("page_sections")
+            .select("id, section_key, section_type, content, sort_order")
+            .eq("page_slug", "about")
+            .eq("is_published", true)
+            .eq("is_visible", true)
+            .order("sort_order", { ascending: true });
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+            data.forEach(renderSection);
+
+            if (content.children.length > 0) {
+                section.hidden = false;
+            }
+        }
+
+    } catch (error) {
+        console.error("SanaDemo CMS:", error);
+    }
+});
+</script>
 
 <script src="script.js" defer></script>
 </body>
